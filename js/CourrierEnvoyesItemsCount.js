@@ -6,7 +6,7 @@
 // Nom de la bibliothèque de dépôt
 var renvoyesListTitle = "CourrierEnvoye";
 
-// Les dates qu'on veut
+// Pour bien faire le filtre on veut calculer la date J-30
 var myDate = new Date();  
 var today = myDate.getDate();
 myDate.setDate(today - 30);  
@@ -14,6 +14,7 @@ myDate.setDate(today - 30);
 // Filtre de la requête
 var filter = "DateCourrier gt datetime'"+myDate.toISOString()+"'";
 
+// Exécution de la requête JQuery
 $(document).ready(function() {
     $.ajax({
         url: "/_api/web/lists/GetByTitle('"+renvoyesListTitle+"')/items?$filter="+filter,
