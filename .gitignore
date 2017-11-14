@@ -1,6 +1,7 @@
 # JQuery #
 ###################
 js/jquery.min.js
+.gitignore
 
 ############
 ## IMAGES ##
