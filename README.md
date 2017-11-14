@@ -1,2 +1,2 @@
-# SharePoint.CourrierCSR
-SharePoint CSR javascript code for custom Mail Management Solution
+# GED Courriers
+Codes JS pour une solution de Gestion Electronique de Courriers
