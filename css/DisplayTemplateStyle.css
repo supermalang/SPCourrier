@@ -14,6 +14,7 @@ border-right: 2px solid silver;
 box-sizing: border-box;
 width:55%;
 border-right: none;
+overflow: hidden;
 }
 .ibsn-display-template .ibsn-display-template-pane:nth-child(2) .ibsn-courrier-file{
 width:100%;

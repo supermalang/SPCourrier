@@ -1,11 +1,13 @@
 /**
- * Ce script permet de récupérer le nombre d'éléments dans la  bibliothèque de dépôt
- * Et mettra la valeur dans les éléments DOM ayant l'ID #dropOffItemCount
+ * Récupère le nombre de courriers en attente d'indexation dans la boîte de dépôt
+ * Utilise l'API REST de SharePoint
+ * La valeur retournée sera affichée dans l'élément DOM ayant l'ID #dropOffItemCount
  */
+function countCourrierDepose() {
+    // Nom de la bibliothèque de dépôt
+    var dropOffListTitle = "Boite de dépot";
 
-// Nom de la bibliothèque de dépôt
-var dropOffListTitle = "Boite de dépot";
-$(document).ready(function() {
+    // Requete
     $.ajax({
         url: "/_api/web/lists/GetByTitle('"+dropOffListTitle+"')/itemcount",
         type: "GET",
@@ -18,4 +20,5 @@ $(document).ready(function() {
             $("#dropOffItemCount").html(itemCount);
         }
     });
-});
+};
+_spBodyOnLoadFunctionNames.push("countCourrierDepose");   

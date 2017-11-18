@@ -1,20 +1,21 @@
 /**
- * Ce script permet de récupérer le nombre de courriers reçus les 30 derniers jours
- * Et mettra la valeur dans les éléments DOM ayant l'ID #recusItemCount
+ * Récupère le nombre de courriers reçus les 30 derniers jours.
+ * Utilise l'API REST de SharePoint
+ * La valeur retournée sera affichée dans l'élément DOM ayant l'ID #recusItemCount
  */
+function countCourrierRecu() {
+    // Nom de la bibliothèque des courriers reçus
+    var recusListTitle = "CourrierRecu";
 
-// Nom de la bibliothèque de dépôt
-var recusListTitle = "CourrierRecu";
+    // Calcul de la date la plus ancienne (J-30)
+    var myDate = new Date();  
+    var today = myDate.getDate();
+    myDate.setDate(today - 30);  
 
-// Les dates qu'on veut
-var myDate = new Date();  
-var today = myDate.getDate();
-myDate.setDate(today - 30);  
+    // Chaîne de filtre de la requête
+    var filter = "DateCourrier gt datetime'"+myDate.toISOString()+"'";
 
-// Filtre de la requête
-var filter = "DateCourrier gt datetime'"+myDate.toISOString()+"'";
-
-$(document).ready(function() {
+    // Requête
     $.ajax({
         url: "/_api/web/lists/GetByTitle('"+recusListTitle+"')/items?$filter="+filter,
         type: "GET",
@@ -27,4 +28,5 @@ $(document).ready(function() {
             $("#recusItemCount").html(itemCount);
         }
     });
-});
+};
+_spBodyOnLoadFunctionNames.push("countCourrierRecu");   

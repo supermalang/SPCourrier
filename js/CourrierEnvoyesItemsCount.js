@@ -1,21 +1,21 @@
 /**
- * Ce script permet de récupérer le nombre de courriers envoyés les 30 derniers jours
- * Et mettra la valeur dans les éléments DOM ayant l'ID #envoyesItemCount
+ * Récupère le nombre de courriers envoyés les 30 derniers jours.
+ * Utilise l'API REST de SharePoint
+ * La valeur retournée sera affichée dans l'élément DOM ayant l'ID #envoyesItemCount
  */
+function countCourrierEnvoye(){
+    // Nom de la bibliothèque des courriers envoyés
+    var renvoyesListTitle = "CourrierEnvoye";
 
-// Nom de la bibliothèque de dépôt
-var renvoyesListTitle = "CourrierEnvoye";
+    // Calcul de la date la plus ancienne (J-30)
+    var myDate = new Date();  
+    var today = myDate.getDate();
+    myDate.setDate(today - 30);  
 
-// Pour bien faire le filtre on veut calculer la date J-30
-var myDate = new Date();  
-var today = myDate.getDate();
-myDate.setDate(today - 30);  
+    // Chaîne de filtre de la requête
+    var filter = "DateCourrier gt datetime'"+myDate.toISOString()+"'";
 
-// Filtre de la requête
-var filter = "DateCourrier gt datetime'"+myDate.toISOString()+"'";
-
-// Exécution de la requête JQuery
-$(document).ready(function() {
+    // Requête
     $.ajax({
         url: "/_api/web/lists/GetByTitle('"+renvoyesListTitle+"')/items?$filter="+filter,
         type: "GET",
@@ -28,4 +28,5 @@ $(document).ready(function() {
             $("#envoyesItemCount").html(itemCount);
         }
     });
-});
+};
+_spBodyOnLoadFunctionNames.push("countCourrierEnvoye");   
