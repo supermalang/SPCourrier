@@ -6,6 +6,8 @@
 
   <body>
     <section class="ibsn-display-template">
+      <div class="ibsn-display-template-pane ibsn-file-previewer" ></div>
+        
       <div class="ibsn-display-template-pane ibsn-courrier-metadata">
         <div class="ibsn-form-group">
           <h3 class="ms-standardheader">Type de contenu</h3>
@@ -41,15 +43,15 @@
           <h3 class="ms-standardheader">Destiné à</h3>
           <span data-internal-name="DestinataireCourrierSortant" class="ibsn-field-value"></span>
         </div>
+        
+        <div class="ibsn-form-group">
+          <h3 class="ms-standardheader">Adresse du destinataire</h3>
+          <span data-internal-name="AdresseDestinataireCourrier" class="ibsn-field-value"></span>
+        </div>
 
         <div class="ibsn-form-group">
           <h3 class="ms-standardheader">Destinataires en copie</h3>
           <span data-internal-name="DestinataireEnCopieCourrier" class="ibsn-field-value"></span>
-        </div>
-        
-        <div class="ibsn-form-group">
-            <h3 class="ms-standardheader">Adresse du destinataire</h3>
-            <span data-internal-name="AdresseDestinataireCourrier" class="ibsn-field-value"></span>
         </div>
         
         <div class="ibsn-form-group">
@@ -92,13 +94,8 @@
             <span data-internal-name="_dlc_DocIdUrl" class="ibsn-field-value"></span>
         </div>
 
-        <div class="ibsn-form-group ibsn-system-data">
-        </div>
+        <div class="ibsn-form-group ibsn-system-data"></div>
       </div>
-
-      <div class="ibsn-display-template-pane" >
-          <iframe class="ibsn-courrier-file" src="" allowfullscreen allowtransparency="true" frameborder="0" ></iframe>
-          </div>
-        </div>
+    </section>
   </body>
 </html>

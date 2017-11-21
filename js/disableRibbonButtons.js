@@ -33,6 +33,9 @@ function disableRibbonButtons(){
     // Nom du destinataire du courrier
     destinataire = this.listItem.get_item('DestinataireCourrierEntrant').$2e_1;
 
+    /** Etat du courrier  */
+    etatCourrier = this.listItem.get_item('EtatCourrier');
+
     // Nom de l'utilsateur Actif
     utilisateurConnecte = this.currentUser.get_title();
     
@@ -40,19 +43,54 @@ function disableRibbonButtons(){
     while (customActionEnumerator.moveNext()) {
         var userCustomAction = customActionEnumerator.get_current();
         customActionTitle = userCustomAction.get_title();
-        // Si le courrier n'est pas destiné à l'utilisateur connecté
         
+        console.log(customActionTitle);
         switch(customActionTitle) {
             case 'Terminer':
-            console.log("Terminer");
-                if (destinataire != utilisateurConnecte){
+                if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
                     // On désactive le bouton Terminer
-                    $(".ms-cui-ctl-largelabel:contains('Terminer')").parent().click(function(e){
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
                         e.stopImmediatePropagation();
                         $(this).addClass("ms-cui-row ms-cui-disabled");
                         return false;
                     });
-                    $(".ms-cui-ctl-largelabel:contains('Terminer')").parent().addClass("ms-cui-row ms-cui-disabled");
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().addClass("ms-cui-row ms-cui-disabled");
+                }
+            break;
+
+            case 'Assigner':
+            if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
+                    // On désactive le bouton Assigner
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
+                        e.stopImmediatePropagation();
+                        $(this).addClass("ms-cui-row ms-cui-disabled");
+                        return false;
+                    });
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().addClass("ms-cui-row ms-cui-disabled");
+                }
+            break;
+
+            case 'Annoter':
+                if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
+                    // On désactive le bouton Annoter
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
+                        e.stopImmediatePropagation();
+                        $(this).addClass("ms-cui-row ms-cui-disabled");
+                        return false;
+                    });
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().addClass("ms-cui-row ms-cui-disabled");
+                }
+            break;
+
+            case 'Transmettre':
+                if (destinataire != utilisateurConnecte || etatCourrier=="Transmettre"){
+                    // On désactive le bouton Transmettre
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
+                        e.stopImmediatePropagation();
+                        $(this).addClass("ms-cui-row ms-cui-disabled");
+                        return false;
+                    });
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().addClass("ms-cui-row ms-cui-disabled");
                 }
             break;
         
@@ -61,6 +99,6 @@ function disableRibbonButtons(){
         }
     }
   }
-  function onFail(sender, args) { console.log(args.get_message()); }
+function onFail(sender, args) { console.log(args.get_message()); }
 //ExecuteOrDelayUntilScriptLoaded(disableRibbonButtons, "sp.ribbon.js");
 _spBodyOnLoadFunctionNames.push("disableRibbonButtons");   

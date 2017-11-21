@@ -6,5 +6,6 @@ function hideRibbonActions(){
     $("#Ribbon\\.ListForm\\.Display\\.Manage-LargeMedium-1").hide();
     $("#Ribbon\\.ListForm\\.Display\\.Manage\\.CheckOut-Large").hide();
     $("#Ribbon\\.ListForm\\.Display\\.Actions-LargeMedium-1").hide();
+    $("#Ribbon\\.ListForm\\.Display\\.Manage\\.CheckIn-Large").hide();
 }
 _spBodyOnLoadFunctionNames.push("hideRibbonActions");    
