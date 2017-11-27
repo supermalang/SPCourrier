@@ -1,14 +1,14 @@
 /**
  * Désactive les boutons d'actions personnalisés selon les informations du courrier
  * Exigences fontionnelles 
- *    - Le destinataire du courrier peut (Terminer, Assigner, Annoter, Transmettre)
- *    - Les personnes en copie peuvent (Assigner, Annoter, Transmettre)
+ *    - Le destinataire du courrier peut (Classer, Assigner, Annoter, Partager)
+ *    - Les personnes en copie peuvent (Assigner, Annoter, Partager)
  *    - Les autres peuvent (Afficher le courrier seulement)
  */
 function disableRibbonButtons(){
   var ctx = new SP.ClientContext.get_current();
   var web = ctx.get_web();
-  
+    
   /** Récupération de l'ID de la liste Active et de l'ID de l'élément de liste actif */
   var listId = _spPageContextInfo.pageListId;
   var itemId = parseInt(GetUrlKeyValue('ID'));
@@ -50,20 +50,21 @@ function onSuccess(sender, args) {
         customActionTitle = userCustomAction.get_title();
         
         switch(customActionTitle) {
-            case 'Terminer':
+            case 'Classer':
                 /**
-                 * L'action 'Terminer' peut être exécutée uniquement si les conditions suivantes sont respectées :
+                 * L'action 'Classer' peut être exécutée uniquement si les conditions suivantes sont respectées :
                  *  - L'utilisateur actif est le propriétaire du courrier
                  *  - Le courrier n'est pas dans l'état 'Terminé'
                  * Si les conditions ne sont pas respectées alors l'action est désactivée
                  */
                 if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').addClass("ms-cui-row ms-cui-disabled");
+
                     $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
                         e.stopImmediatePropagation();
                         $(this).addClass("ms-cui-row ms-cui-disabled");
                         return false;
                     });
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().addClass("ms-cui-row ms-cui-disabled");
                 }
             break;
 
@@ -76,12 +77,13 @@ function onSuccess(sender, args) {
                  * Si les conditions ne sont pas respectées alors l'action est désactivée
                  */
                 if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
-                        $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
-                            e.stopImmediatePropagation();
-                            $(this).addClass("ms-cui-row ms-cui-disabled");
-                            return false;
-                        });
-                        $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().addClass("ms-cui-row ms-cui-disabled");
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').addClass("ms-cui-row ms-cui-disabled");
+
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
+                        e.stopImmediatePropagation();
+                        $(this).addClass("ms-cui-row ms-cui-disabled");
+                        return false;
+                    });
                 }
             break;
 
@@ -94,30 +96,32 @@ function onSuccess(sender, args) {
                  * Si les conditions ne sont pas respectées alors l'action est désactivée
                  */
                 if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').addClass("ms-cui-row ms-cui-disabled");
+
                     $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
                         e.stopImmediatePropagation();
                         $(this).addClass("ms-cui-row ms-cui-disabled");
                         return false;
                     });
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().addClass("ms-cui-row ms-cui-disabled");
                 }
             break;
 
-            case 'Transmettre':
+            case 'Partager':
                 /**
-                 * L'action 'Transmettre' peut être exécutée uniquement si les conditions suivantes sont respectées :
+                 * L'action 'Partager' peut être exécutée uniquement si les conditions suivantes sont respectées :
                  *  - L'utilisateur actif est le propriétaire du courrier
                  *  - L'utilisateur actif est en copie du courrier
                  *  - Le courrier n'est pas dans l'état 'Terminé'
                  * Si les conditions ne sont pas respectées alors l'action est désactivée
                  */
                 if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').addClass("ms-cui-row ms-cui-disabled");
+
                     $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
                         e.stopImmediatePropagation();
                         $(this).addClass("ms-cui-row ms-cui-disabled");
                         return false;
                     });
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().addClass("ms-cui-row ms-cui-disabled");
                 }
             break;
         
