@@ -45,6 +45,13 @@ font-family: Arial, Helvetica, sans-serif;
     min-height: 40px; max-height: 200px;
     overflow: auto;
 }
+.ibsn-system-data{
+    overflow: hidden!important;
+}
+.ibsn-field-actionbuttons{
+    margin-top:1.5em;
+    padding-top: 1.2em;
+}
 
 .ibsn-task-courrier-template{
     width: 1080px!important;

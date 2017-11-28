@@ -5,10 +5,13 @@ function moveCourrierFields(){
     $(".ibsn-field-value").each(function(){
         internalName = $(this).attr("data-internal-name");
         elem = $(this);
+        elemLabel = elem.prev('.ibsn-standardheader');
 
+        /** Parcourt les champs du formulaire par défaut présenté par SharePoint */
         $("table.ms-formtable td").each(function(){
             /** Pour les champs de courrier simple */
             if(this.innerHTML.indexOf('FieldInternalName="'+internalName+'"') != -1 ){
+                $(this).prev().contents().appendTo(elemLabel);
                 $(this).contents().appendTo(elem);
             }
 
@@ -47,6 +50,9 @@ function moveCourrierFields(){
                 $(".ibsn-file-previewer").css("width", "58%");
                 $(".ibsn-courrier-metadata").css("width", "41%");
                 $(this).contents().appendTo("span[data-internal-name='ContentTypeChoice']");
+
+                /** On en profite pour cacher cet élément */
+                $("table.ms-formtoolbar").parent().hide();
             }
         });
 
@@ -57,14 +63,30 @@ function moveCourrierFields(){
         if (elem.is(':empty')){
             elem.parent().hide();
         }
-
-        /**
-         * On cache les autres éléments de la page retournés par défaut par SharePoint
-         */
-        $("table.ms-formtable").hide();
-        $("table.ms-formtable + table").first().contents().appendTo($(".ibsn-system-data"));
-        $("table.ms-formtable + table").hide();
-        $(".ms-recommendations-panel").hide();
     });
+
+    /** On déplace les boutons d'action vers leur emplacement de destination sur le template */
+    $("table.ms-formtable + table").first().find("td.ms-toolbar[width='99%']").nextAll().appendTo($(".ibsn-field-actionbuttons"));
+    $("table.ms-formtoolbar").eq(1).find("td.ms-toolbar[width='99%']").nextAll().appendTo($(".ibsn-field-actionbuttons"));
+    /** On déplace les information de système SharePoint vers leur emplacement de destination sur le template */
+    $("table.ms-formtable + table").first().contents().appendTo($(".ibsn-system-data"));
+    $("table.ms-formtoolbar").eq(1).contents().appendTo($(".ibsn-system-data"));
+    
+    /**
+     * On cache les autres éléments de la page retournés par défaut par SharePoint
+     */
+    $("table.ms-formtable").hide();
+    $("table.ms-formtable + table").hide();
+    $(".ms-recommendations-panel").hide();
+    $(".ms-formline").hide();
+
+    /** Si on ne se trouve pas dans la page de répertoire de dépôt */
+    if(!location.pathname.substring(1).includes("DropOffLibrary")){
+        $(".ibsn-system-data > tbody:nth-child(2)").hide();
+    }
 };
-_spBodyOnLoadFunctionNames.push("moveCourrierFields");
+
+/** Document ready */
+$(function(){
+    ExecuteOrDelayUntilScriptLoaded(moveCourrierFields, "sp.js");
+});
