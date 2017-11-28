@@ -1,11 +1,15 @@
 /**
- * Désactive les boutons d'actions personnalisés selon les informations du courrier
+ * Désactive les boutons d'actions personnalisés du courrier reçu selon, le niveau de traitement
  * Exigences fontionnelles 
  *    - Le destinataire du courrier peut (Classer, Assigner, Annoter, Partager)
  *    - Les personnes en copie peuvent (Assigner, Annoter, Partager)
  *    - Les autres peuvent (Afficher le courrier seulement)
  */
 function disableRibbonButtons(){
+    /** On commence par désactiver temporairement tous les boutons d'actions personnalisés (à l'aide de propriétés CSS, plutôt qu'en supprimant les eventHandlers) */
+    $(".ms-cui-ctl-largelabel").parent('a').css("pointer-events", "none");
+    $(".ms-cui-ctl-largelabel").parent('a').addClass("ms-cui-row ibsn-cui-disabled");
+
   var ctx = new SP.ClientContext.get_current();
   var web = ctx.get_web();
     
@@ -52,76 +56,57 @@ function onSuccess(sender, args) {
         switch(customActionTitle) {
             case 'Classer':
                 /**
-                 * L'action 'Classer' peut être exécutée uniquement si les conditions suivantes sont respectées :
+                 * L'action 'Classer' peut être activée uniquement si les conditions suivantes sont respectées :
                  *  - L'utilisateur actif est le propriétaire du courrier
                  *  - Le courrier n'est pas dans l'état 'Terminé'
-                 * Si les conditions ne sont pas respectées alors l'action est désactivée
+                 * Si les conditions ne sont pas respectées alors l'action reste désactivée
                  */
-                if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').addClass("ms-cui-row ms-cui-disabled");
-
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
-                        e.stopImmediatePropagation();
-                        $(this).addClass("ms-cui-row ms-cui-disabled");
-                        return false;
-                    });
+                if (destinataire == utilisateurConnecte && etatCourrier!="Terminé" && etatCourrier!="En Attente"){
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').removeClass("ibsn-cui-disabled");
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
                 }
             break;
 
             case 'Assigner':
                 /**
-                 * L'action 'Assigner' peut être exécutée uniquement si les conditions suivantes sont respectées :
+                 * L'action 'Assigner' peut être activée uniquement si les conditions suivantes sont respectées :
                  *  - L'utilisateur actif est le propriétaire du courrier
                  *  - L'utilisateur actif est en copie du courrier
+                 *  - Le courrier n'est pas dans l'état 'En Attente'
                  *  - Le courrier n'est pas dans l'état 'Terminé'
                  * Si les conditions ne sont pas respectées alors l'action est désactivée
                  */
-                if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').addClass("ms-cui-row ms-cui-disabled");
-
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
-                        e.stopImmediatePropagation();
-                        $(this).addClass("ms-cui-row ms-cui-disabled");
-                        return false;
-                    });
+                if (destinataire == utilisateurConnecte && etatCourrier!="Terminé" && etatCourrier!="En Attente"){
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').removeClass("ibsn-cui-disabled");
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
                 }
             break;
 
             case 'Annoter':
                 /**
-                 * L'action 'Annoter' peut être exécutée uniquement si les conditions suivantes sont respectées :
+                 * L'action 'Annoter' peut être activée uniquement si les conditions suivantes sont respectées :
                  *  - L'utilisateur actif est le propriétaire du courrier
                  *  - L'utilisateur actif est en copie du courrier
                  *  - Le courrier n'est pas dans l'état 'Terminé'
-                 * Si les conditions ne sont pas respectées alors l'action est désactivée
+                 * Si les conditions ne sont pas respectées alors l'action reste désactivée
                  */
-                if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').addClass("ms-cui-row ms-cui-disabled");
-
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
-                        e.stopImmediatePropagation();
-                        $(this).addClass("ms-cui-row ms-cui-disabled");
-                        return false;
-                    });
+                if (destinataire == utilisateurConnecte && etatCourrier!="Terminé"){
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').removeClass("ibsn-cui-disabled");
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
                 }
             break;
 
             case 'Partager':
                 /**
-                 * L'action 'Partager' peut être exécutée uniquement si les conditions suivantes sont respectées :
+                 * L'action 'Partager' peut être activée uniquement si les conditions suivantes sont respectées :
                  *  - L'utilisateur actif est le propriétaire du courrier
                  *  - L'utilisateur actif est en copie du courrier
                  *  - Le courrier n'est pas dans l'état 'Terminé'
                  * Si les conditions ne sont pas respectées alors l'action est désactivée
                  */
-                if (destinataire != utilisateurConnecte || etatCourrier=="Terminé"){
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').addClass("ms-cui-row ms-cui-disabled");
-
-                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent().click(function(e){
-                        e.stopImmediatePropagation();
-                        $(this).addClass("ms-cui-row ms-cui-disabled");
-                        return false;
-                    });
+                if (destinataire == utilisateurConnecte && etatCourrier!="Terminé"){
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').removeClass("ibsn-cui-disabled");
+                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
                 }
             break;
         
@@ -131,5 +116,9 @@ function onSuccess(sender, args) {
     }
 }
 function onFail(sender, args) { console.log(args.get_message()); }
-//ExecuteOrDelayUntilScriptLoaded(disableRibbonButtons, "sp.ribbon.js");
-_spBodyOnLoadFunctionNames.push("disableRibbonButtons");   
+
+/** Document ready */
+$(function(){
+    ExecuteOrDelayUntilScriptLoaded(disableRibbonButtons, "SP.js");
+    //_spBodyOnLoadFunctionNames.push("disableRibbonButtons");   
+});

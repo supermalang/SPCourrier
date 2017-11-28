@@ -72,3 +72,21 @@ font-family: Arial, Helvetica, sans-serif;
 .ibsn-task-courrier-template-pane.ibsn-task-file-previewer img{
     width:100%;
 } 
+
+
+/** Nous copions les propriétés de ms-cui-disabled **/
+.ibsn-cui-disabled *{
+color:#5b626c !important;
+cursor:default !important;
+}
+.ibsn-cui-disabled .ms-cui-img-container,.ibsn-cui-disabled .ms-cui-img-cont-float,.ibsn-cui-disabled .ms-cui-jewel-left,.ibsn-cui-disabled .ms-cui-jewel-middle,.ibsn-cui-disabled .ms-cui-jewel-right{
+background-color:#fff !important;
+opacity:0.3;
+}
+.ms-cui-needIEFilter .ibsn-cui-disabled .ms-cui-img-container,.ms-cui-needIEFilter .ibsn-cui-disabled .ms-cui-img-cont-float,.ms-cui-needIEFilter .ibsn-cui-disabled .ms-cui-jewel-left,
+.ms-cui-needIEFilter .ibsn-cui-disabled .ms-cui-jewel-middle,.ms-cui-needIEFilter .ibsn-cui-disabled .ms-cui-jewel-right{
+filter:alpha(opacity=30);-ms-filter:"alpha(opacity=30)";
+}
+.ibsn-cui-disabled .ms-cui-jewel-middle .ms-cui-jewel-label{
+color:#fff !important;
+}
