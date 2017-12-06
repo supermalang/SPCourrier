@@ -2,6 +2,9 @@
  * Organise le placement des champs des formulaires de courrier dans le formulaire courrierForm.html
  */
 function moveCourrierFields(){
+    /** Chemin relatif de la page active */
+    var cheminRelatif = location.pathname;
+
     $(".ibsn-field-value").each(function(){
         internalName = $(this).attr("data-internal-name");
         elem = $(this);
@@ -50,9 +53,6 @@ function moveCourrierFields(){
                 $(".ibsn-file-previewer").css("width", "58%");
                 $(".ibsn-courrier-metadata").css("width", "41%");
                 $(this).contents().appendTo("span[data-internal-name='ContentTypeChoice']");
-
-                /** On en profite pour cacher cet élément */
-                $("table.ms-formtoolbar").parent().hide();
             }
         });
 
@@ -63,7 +63,44 @@ function moveCourrierFields(){
         if (elem.is(':empty')){
             elem.parent().hide();
         }
+
+        /** Dans la page de détails de courrier, on cache les champs vides */
+        if(cheminRelatif.indexOf("DispForm") >= 0) {
+            /** On clone d'abord le champ, puis on supprime les commentaires inclus avant de vérifier si le champ est totalement vide */
+            var elemclone = elem.clone();
+            elemclone.contents().filter(function() {
+                return this.nodeType == 8;
+                //return this.nodeType == Node.COMMENT_NODE;
+            }).remove();
+
+            /** Si le clone, sans les commentaires est vide, alors on cache le champ */
+            if(!elemclone.html().replace(/\r?\n|\r|\t|\/ \//g,'').length){
+                elem.parent().hide();
+            }
+        }
     });
+
+    /** Si on est dans une page d'édition (Ex : page d'indexation dans la boîte de dépôt)' */
+    if(cheminRelatif.indexOf("EditForm") >= 0) {
+        /** On alterne la visibilité de l'affichage des éléments .ibsn-toogle à l'aide d'un clic sur un bouton */
+        $(".ibsn-toggle").each(function(){
+            /** Le champ est d'abord caché */
+            $(this).next().hide();
+            /** Ajout du qui va actionner le basculement de la visibilité */
+            $(this).append("<a href='#' class='ibsn-right ibsn-toggle-button' style='position:relative;top:-15px;'>Ajouter</a>");
+            /** Basculement de la visibilité du champ */
+            $(this).find(".ibsn-toggle-button").click(function(){
+                var buttonText = $(this).text() == "Ajouter" ? "Annuler" : "Ajouter" ;
+                $(this).text(buttonText);
+                $(this).parent().next().find('textarea').val('');
+                $(this).parent().next().toggle(500);
+            });
+        });
+        /** On cache les éléments qu'on ne doit pas afficher dans le formulaire d'édition */
+        $(".ibsn-readonly").hide();
+        /** On en profite pour cacher cet élément */
+        $("table.ms-formtoolbar").parent().hide();
+    }
 
     /** On déplace les boutons d'action vers leur emplacement de destination sur le template */
     $("table.ms-formtable + table").first().find("td.ms-toolbar[width='99%']").nextAll().appendTo($(".ibsn-field-actionbuttons"));

@@ -53,6 +53,14 @@ font-family: Arial, Helvetica, sans-serif;
     padding-top: 1.2em;
 }
 
+.ibsn-right{
+    position: relative;
+    float: right;
+    cursor: pointer;
+}
+.ibsn-right:hover{ text-decoration: none;}
+
+
 .ibsn-task-courrier-template{
     width: 1080px!important;
     font-family: Arial, Helvetica, sans-serif;

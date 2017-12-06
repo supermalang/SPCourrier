@@ -120,5 +120,4 @@ function onFail(sender, args) { console.log(args.get_message()); }
 /** Document ready */
 $(function(){
     ExecuteOrDelayUntilScriptLoaded(disableRibbonButtons, "SP.js");
-    //_spBodyOnLoadFunctionNames.push("disableRibbonButtons");   
 });
