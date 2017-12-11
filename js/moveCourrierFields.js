@@ -1,5 +1,8 @@
 /**
  * Organise le placement des champs des formulaires de courrier dans le formulaire courrierForm.html
+ * Dépendances :
+ *  - jQuery
+ *  - functions.ibsn.js : Fichier qui contient des fonctions personnalisées
  */
 function moveCourrierFields(){
     /** Chemin relatif de la page active */
@@ -121,6 +124,14 @@ function moveCourrierFields(){
     if(!location.pathname.substring(1).includes("DropOffLibrary")){
         $(".ibsn-system-data > tbody:nth-child(2)").hide();
     }
+
+    $.getScript( "/SiteAssets/js/functions/functions.ibsn.js" )
+    .done(function() {
+        var contentTypeID = getUrlParameter('TypeDeContenu');
+        $("[data-internal-name='ContentTypeChoice'] select option[value*='"+contentTypeID+"']").attr('selected','selected');
+    })
+    .fail(function( jqxhr, settings, exception ) { console.log("Le fichier n'a pu être chargé") });
+    window.history.replaceState({}, document.title, "/" + "my-new-url.html");
 };
 
 /** Document ready */
