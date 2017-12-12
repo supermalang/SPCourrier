@@ -17,35 +17,24 @@ function moveCourrierRecuTaskFields(){
         });// Fin du each sur la table
     });// Fin du each parent
 
-    /** Pour l'élément connexe : On le prévisualise */
-    this.ctx = new SP.ClientContext.get_current();
-    this.web = this.ctx.get_web();
-        
     /** Récupération de l'ID de la liste Active et de l'ID de l'élément de liste actif */
+    var _getRelatedItems = $.Deferred();
+    var _getFirstRelatedItemUrl = $.Deferred();
     var listId = _spPageContextInfo.pageListId;
     var itemId = parseInt(GetUrlKeyValue('ID'));
     
-    /** Récupération de la tâche (l'élément de liste) */
-    this.list = this.web.get_lists().getById(listId);
-    this.listItem = this.list.getItemById(itemId);
+    $.getScript( "/SiteAssets/js/functions/functions.ibsn.js" )
+    .done(function() {
+        _getRelatedItems = getRelatedItems(listId,itemId);
+        _getRelatedItems.done(function(relatedItemsString){
+            relatedItems = JSON.parse(relatedItemsString);
+            _getFirstRelatedItemUrl.resolve(getRelatedItemFileUrl(relatedItems[0].ListId,relatedItems[0].ItemId));
+        });
+        $.when(_getFirstRelatedItemUrl).done(function(relatedItemURL){displayRelatedItem(relatedItemURL) });
 
-    this.ctx.load(this.listItem);
-    this.ctx.executeQueryAsync(
-        Function.createDelegate(this, function(sender, args){ // OnSuccess
-            /** Tableau d'éléments connexes */
-            var RelatedItems        = this.listItem.get_item('RelatedItems');
-            /** Liste comportant l'élément connexe */
-            var relatedItemListID   = RelatedItems[0].ListId;
-            /** ID de l'élément connexe */
-            var relatedItemID       = RelatedItems[0].ItemId;
-            /** Elément connexe */
-            displayRelatedItem(relatedItemListID,relatedItemID);
-            
-        }), 
-        Function.createDelegate(this, function(sender, args){ // OnFail
-            console.log(args.get_message());
-        })
-    );
+    })
+    .fail(function( jqxhr, settings, exception ) { console.log("Le fichier n'a pu être chargé") });
+        
 
     /** On déplace les boutons d'action vers leur emplacement de destination sur le template */
     $("table.ms-formtable + table").first().find("td.ms-toolbar[width='99%']").nextAll().appendTo($(".ibsn-task-outcome-editform"));
@@ -58,55 +47,37 @@ function moveCourrierRecuTaskFields(){
     $("table.ms-formtable").hide();
     $("table.ms-formtable + table").hide();
     $(".ms-recommendations-panel").hide();
+    $(".ms-formline").hide();
+    $(".ms-relateditems-core").hide();
 };
+
 
 /**
  * Récupère l'élément connexe (fichier du courrier associé) de la liste de tâches de courrier
- * @param {string} listId 
- * @param {number} itemId 
+ * @param {string} url 
  */
-function displayRelatedItem(listId, itemId) {
-    relatedItemList = this.web.get_lists().getById(listId);
-    relatedItem     = relatedItemList.getItemById(itemId);
+function displayRelatedItem(url) {
+    /** Extension du fichier connexe */
+    var extension = url.substr( (url.lastIndexOf('.') +1) );
+    /** Seuls les images et les fichiers PDF seront prévisualisés */
+    var imageExtensions = ["JPEG", "JPG", "PNG"];
+    var pdfExtensions = ["PDF"];
 
-    this.ctx.load(relatedItem);
-    this.ctx.executeQueryAsync(
-        Function.createDelegate(this, function(sender, args){ // OnSuccess
-            /** URL de l'élément connexe */
-            var relatedItemUrl = relatedItem.get_item('ServerRelativeUrl');
-            console.log(relatedItemUrl);
-
-            /** On vérifie l'extension du fichier connexe */
-            try {
-                /** Extension du fichier connexe */
-                var extension = relatedItemUrl.substr( (relatedItemUrl.lastIndexOf('.') +1) );
-                /** Seuls les images et les fichiers PDF seront prévisualisés */
-                var imageExtensions = ["JPEG", "JPG", "PNG"];
-                var pdfExtensions = ["PDF"];
-                
-                /** Si le fichier connexe (le courrier scanné) est une image, on affiche une image */
-                if($.inArray(extension.toUpperCase(), imageExtensions) >= 0) {
-                    elem.html('<img src="'+relatedItemUrl+'"/>');
-                }
-                /** Si le fichier connexe (le courrier scanné) est un PDF, on affiche un iframe */
-                else if($.inArray(extension.toUpperCase(), pdfExtensions) >= 0) {
-                    elem.html('<iframe src="'+relatedItemUrl+'" allowfullscreen allowtransparency="true" frameborder="0" ></iframe>');
-                }
-                /** Si le fichier connexe n'est ni une image, ni un PDF, on affiche un message */
-                else{
-                    /** Sinon */
-                    elem.html("<p>Le type de fichier uploadé ne peut être prévisualisé</p>");
-                }
-            } catch (error) {
-                console.log("Erreur : "+error);
-            }
-        }), 
-        Function.createDelegate(this, function(sender, args){ // OnFail
-            console.log(args.get_message());
-        })
-    );
-
-    return returnData;
+    var previewerlocation = $(".ibsn-task-file-previewer span");
+    
+    /** Si le fichier connexe (le courrier scanné) est une image, on affiche une image */
+    if($.inArray(extension.toUpperCase(), imageExtensions) >= 0) {
+        previewerlocation.html('<img src="'+url+'"/>');
+    }
+    /** Si le fichier connexe (le courrier scanné) est un PDF, on affiche un iframe */
+    else if($.inArray(extension.toUpperCase(), pdfExtensions) >= 0) {
+        previewerlocation.html('<iframe src="'+url+'" allowfullscreen allowtransparency="true" frameborder="0" ></iframe>');
+    }
+    /** Si le fichier connexe n'est ni une image, ni un PDF, on affiche un message */
+    else{
+        /** Sinon */
+        previewerlocation.html("<p>Le type de fichier uploadé ne peut être prévisualisé</p>");
+    }
 }
 
 /** Document ready */

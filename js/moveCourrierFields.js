@@ -131,7 +131,7 @@ function moveCourrierFields(){
         $("[data-internal-name='ContentTypeChoice'] select option[value*='"+contentTypeID+"']").attr('selected','selected');
     })
     .fail(function( jqxhr, settings, exception ) { console.log("Le fichier n'a pu être chargé") });
-    window.history.replaceState({}, document.title, "/" + "my-new-url.html");
+   // window.history.replaceState({}, document.title, "/" + "my-new-url.html");
 };
 
 /** Document ready */
