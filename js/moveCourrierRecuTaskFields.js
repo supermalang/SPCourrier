@@ -18,19 +18,29 @@ function moveCourrierRecuTaskFields(){
     });// Fin du each parent
 
     /** Récupération de l'ID de la liste Active et de l'ID de l'élément de liste actif */
-    var _getRelatedItems = $.Deferred();
-    var _getFirstRelatedItemUrl = $.Deferred();
     var listId = _spPageContextInfo.pageListId;
     var itemId = parseInt(GetUrlKeyValue('ID'));
     
+    var _getRelatedItems = $.Deferred();
+    var _getFirstRelatedItemUrl = $.Deferred();
+    
+    /** Chargement du script contenant les fonctions personnalisées */
     $.getScript( "/SiteAssets/js/functions/functions.ibsn.js" )
     .done(function() {
+        /** Récupère un tableau (string) contenant les éléments connexes de la tâche. getRelatedItems() est asynchrone */
         _getRelatedItems = getRelatedItems(listId,itemId);
+        
         _getRelatedItems.done(function(relatedItemsString){
+            /** Conversion en tableau d'objets */
             relatedItems = JSON.parse(relatedItemsString);
+            /** Récupération de l'URL du premier élément connexe. La fonction getRelatedItemFileUrl() est asynchrone */
             _getFirstRelatedItemUrl.resolve(getRelatedItemFileUrl(relatedItems[0].ListId,relatedItems[0].ItemId));
         });
-        $.when(_getFirstRelatedItemUrl).done(function(relatedItemURL){displayRelatedItem(relatedItemURL) });
+        $.when(_getFirstRelatedItemUrl).done(
+            function(relatedItemURL){
+                /** Prévisualisation du courrier connexe */
+                displayRelatedItem(relatedItemURL) 
+            });
 
     })
     .fail(function( jqxhr, settings, exception ) { console.log("Le fichier n'a pu être chargé") });
@@ -53,16 +63,16 @@ function moveCourrierRecuTaskFields(){
 
 
 /**
- * Récupère l'élément connexe (fichier du courrier associé) de la liste de tâches de courrier
+ * Affiche dans le panneau de prévisualisation le courrier connexe associé à la tâche en cours
  * @param {string} url 
  */
 function displayRelatedItem(url) {
-    /** Extension du fichier connexe */
+    /** Extension du courrier */
     var extension = url.substr( (url.lastIndexOf('.') +1) );
     /** Seuls les images et les fichiers PDF seront prévisualisés */
     var imageExtensions = ["JPEG", "JPG", "PNG"];
     var pdfExtensions = ["PDF"];
-
+    /** Emplacement de prévisualisation du courrier */
     var previewerlocation = $(".ibsn-task-file-previewer span");
     
     /** Si le fichier connexe (le courrier scanné) est une image, on affiche une image */
