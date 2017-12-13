@@ -51,6 +51,25 @@ function getRelatedItemFileUrl(listId, itemId){
         beforeSend: function(xhr){
             xhr.setRequestHeader('Accept', 'Application/json;odata=verbose');
             xhr.setRequestHeader('Content-Type', 'Application/json;odata=verbose');
-        },  success: function(data) { console.log("Retourne : "+data.d.ServerRelativeUrl); fileReturn.resolve(data.d.ServerRelativeUrl); }});
+        },  success: function(data) { fileReturn.resolve(data.d.ServerRelativeUrl); }});
     return fileReturn;
+}
+
+/**
+ * Renvoie l'ID du propriétaire d'un élément
+ * @param {string} listID GUID de la liste de l'élément dont on veut récupérer l'ID du propriétaire
+ * @param {number} itemID ID de l'élément dont on veut récupérer l'ID du propriétaire
+ */
+function getItemOwnerID(listID, itemID) {
+    ownerID = $.Deferred();
+    /** Requete AJAX */
+    requestUrl = "/_api/web/lists(guid'"+listID.replace(/[{}]/g,'')+"')/items("+itemID+")/";
+    $.ajax({
+        url: requestUrl,
+        type: "GET",
+        beforeSend: function(xhr){
+            xhr.setRequestHeader('Accept', 'Application/json;odata=verbose');
+            xhr.setRequestHeader('Content-Type', 'Application/json;odata=verbose');
+        },  success: function(data) { ownerID.resolve(data.d.AuthorId); }});
+    return ownerID;
 }
