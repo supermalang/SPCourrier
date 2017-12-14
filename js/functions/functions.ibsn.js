@@ -73,3 +73,33 @@ function getItemOwnerID(listID, itemID) {
         },  success: function(data) { ownerID.resolve(data.d.AuthorId); }});
     return ownerID;
 }
+
+/**
+ * Renvoie le contentTypeID (GUID) d'un type de contenu dont le nom est donné. Fonction asynchrone
+ * @param {string} ctName Nom du type de contenu
+ */
+function getContentTypeID(ctName) {
+    /** Le GUID du contentType retourné. Variable Asynchrone */
+    var contentTypeID = $.Deferred();
+    /** Requête Ajax */  
+    var filter        = "Name eq '"+ctName+"'";
+    $.ajax({
+        url: "/_api/web/AvailableContentTypes?$select=Name,StringId&$filter="+filter,
+        type: "GET",
+        beforeSend: function(xhr){
+            xhr.setRequestHeader('Accept', 'Application/json;odata=verbose');
+            xhr.setRequestHeader('Content-Type', 'Application/json;odata=verbose');
+        },
+        success: function(data) { contentTypeID.resolve(data.d.results[0].StringId); }
+    });
+    return contentTypeID;
+};
+
+/**
+ * Permet de sélecionner un type de contenu par défaut, dans un EditForm
+ * @param {string} contentTypeID le GUID du type de contenu qu'on veut sélectionner par défaut
+ */
+function autoselectContentType(contentTypeID){
+    window.history.pushState({}, document.title, "/" + window.location.pathname);
+    $("span[data-internal-name='ContentTypeChoice'] select option[value*='"+contentTypeID+"']").attr('selected','selected').change();
+}
