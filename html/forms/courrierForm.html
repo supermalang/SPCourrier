@@ -11,7 +11,7 @@
       <div class="ibsn-display-template-pane ibsn-courrier-metadata">
         <!-- Type de contenu (affiché lors de l'indexation, dans la boîte de dépôt) -->
         <div class="ibsn-form-group">
-          <span class="ibsn-standardheader"></span>
+          <span class="ibsn-standardheader" style="display:block">Type de courrier</span>
           <span data-internal-name="ContentTypeChoice" class="ibsn-field-value"></span>
         </div>
 
@@ -35,8 +35,17 @@
         
         <!-- Expéditeur du courrier entrant -->
         <div class="ibsn-form-group">
-          <span class="ibsn-standardheader"></span>
-          <span data-internal-name="ExpediteurCourrierEntrant" class="ibsn-field-value"></span>
+          <span class="ibsn-standardheader" style="display:block">Expéditeur du courrier</span>
+          <span>
+            <label for="expediteurExterne">
+              <input type="radio" name="typeExpediteur" id="expediteurExterne" checked="checked"/> Expéditeur Externe
+            </label>
+            <label for="expediteurInterne">
+              <input type="radio" name="typeExpediteur" id="expediteurInterne"/> Expéditeur Interne
+            </label>
+          </span>
+          <span data-internal-name="ExpediteurCourrierEntrant" class="ibsn-field-value ibsn-courrier-expediteur-externe"></span>
+          <span data-internal-name="ExpediteurInterne" class="ibsn-field-value ibsn-courrier-expediteur-interne"></span>
         </div>
         
         <!-- Expéditeur du courrier sortant -->
@@ -59,8 +68,17 @@
         
         <!-- Destinataire du courrier sortant -->
         <div class="ibsn-form-group">
-          <span class="ibsn-standardheader"></span>
-          <span data-internal-name="DestinataireCourrierSortant" class="ibsn-field-value"></span>
+          <span class="ibsn-standardheader" style="display:block">Destinataire du courrier</span>
+          <span>
+            <label for="destinataireExterne">
+              <input type="radio" name="typeDestinataire" id="destinataireExterne" checked="checked"/> Destinataire externe
+            </label>
+            <label for="destinataireInterne">
+              <input type="radio" name="typeDestinataire" id="destinataireInterne"/> Destinataire interne
+            </label>
+          </span>
+          <span data-internal-name="DestinataireCourrierSortant" class="ibsn-field-value ibsn-courrier-destinataire-externe"></span>
+          <span data-internal-name="DestinataireInterne" class="ibsn-field-value ibsn-courrier-destinataire-interne"></span>
         </div>
         
         <!-- Adresse du destinataire du courrier entrant -->
@@ -124,5 +142,24 @@
         <div class="ibsn-form-group ibsn-system-data"></div>
       </div>
     </section>
+
+    <script>
+      /** Gestion du toggle pour l'expéditeur du courrier entrant */
+      $('.ibsn-courrier-expediteur-interne').hide();
+      $("input[name='typeExpediteur'").click(function(){
+        if($("#expediteurExterne").is(':checked')){ $(".ibsn-courrier-expediteur-interne").hide();$(".ibsn-courrier-expediteur-externe").show(); }
+        if($("#expediteurInterne").is(':checked')){ $(".ibsn-courrier-expediteur-externe").hide();$(".ibsn-courrier-expediteur-interne").show(); }
+      })
+
+      /** Gestion du toggle pour l'expéditeur du courrier sortant */
+      $('.ibsn-courrier-destinataire-interne').hide();
+      $("input[name='typeDestinataire'").click(function(){
+        if($("#destinataireInterne").is(':checked')){ $(".ibsn-courrier-destinataire-externe").hide();$(".ibsn-courrier-destinataire-interne").show(); }
+        if($("#destinataireExterne").is(':checked')){ $(".ibsn-courrier-destinataire-interne").hide();$(".ibsn-courrier-destinataire-externe").show(); }
+      })
+    </script>
+
   </body>
 </html>
+
+
