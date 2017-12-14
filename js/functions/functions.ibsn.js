@@ -100,6 +100,8 @@ function getContentTypeID(ctName) {
  * @param {string} contentTypeID le GUID du type de contenu qu'on veut sélectionner par défaut
  */
 function autoselectContentType(contentTypeID){
+    /** On efface le paramétre de l'URL. Sinon, la page va se recharger indéfiniment */
     window.history.pushState({}, document.title, "/" + window.location.pathname);
-    $("span[data-internal-name='ContentTypeChoice'] select option[value*='"+contentTypeID+"']").attr('selected','selected').change();
+    /** Selection du type de contenu par défaut */
+    $("[data-internal-name='ContentTypeChoice'] select option[value*='"+contentTypeID+"']").attr('selected','selected').change();
 }
