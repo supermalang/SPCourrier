@@ -80,6 +80,7 @@ function moveCourrierFields(){
             if(!elemclone.html().replace(/\r?\n|\r|\t|\/ \//g,'').length){
                 elem.parent().hide();
             }
+            $(".ibsn-selecteur").hide();
         }
     });
 
@@ -90,7 +91,7 @@ function moveCourrierFields(){
             /** Le champ est d'abord caché */
             $(this).next().hide();
             /** Ajout du qui va actionner le basculement de la visibilité */
-            $(this).append("<a href='#' class='ibsn-right ibsn-toggle-button' style='position:relative;top:-15px;'>Ajouter</a>");
+            $(this).append("<a class='ibsn-right ibsn-toggle-button' style='position:relative;top:-15px;'>Ajouter</a>");
             /** Basculement de la visibilité du champ */
             $(this).find(".ibsn-toggle-button").click(function(){
                 var buttonText = $(this).text() == "Ajouter" ? "Annuler" : "Ajouter" ;
@@ -125,13 +126,20 @@ function moveCourrierFields(){
         $(".ibsn-system-data > tbody:nth-child(2)").hide();
     }
 
+    /** Dans le EditForm (Formulaire de description du courrier) on sélectionne du type de contenu par défaut.
+     *  Cette sélection est paramétrable à parir de l'URL, avec le paramétre 'TypeDeContenu' qui doit contenir le GUID du type de contenu
+     *  qu'on veut sélectionner par défaut
+     */
     $.getScript( "/SiteAssets/js/functions/functions.ibsn.js" )
-    .done(function() {
+    .done(function(){
+        /** Type de contenu à sélectionner par défaut */
         var contentTypeID = getUrlParameter('TypeDeContenu');
-        $("[data-internal-name='ContentTypeChoice'] select option[value*='"+contentTypeID+"']").attr('selected','selected');
-    })
-    .fail(function( jqxhr, settings, exception ) { console.log("Le fichier n'a pu être chargé") });
-   // window.history.replaceState({}, document.title, "/" + "my-new-url.html");
+        /** Si la paramétre est défini */
+        if (typeof contentTypeID !== 'undefined') {
+            /** Sélection sélection d'un type de courrier (type de contenu) par défaut */
+            autoselectContentType(contentTypeID);
+        }
+    }).fail(function( jqxhr, settings, exception ) { console.log("Le fichier n'a pu être chargé") });
 };
 
 /** Document ready */
