@@ -84,7 +84,7 @@ function moveCourrierFields(){
         }
     });
 
-    /** Si on est dans une page d'édition (Ex : page d'indexation dans la boîte de dépôt)' */
+    /** Si on est dans une page d'édition (Ex : page de description dans la boîte de dépôt)' */
     if(cheminRelatif.indexOf("EditForm") >= 0) {
         /** On alterne la visibilité de l'affichage des éléments .ibsn-toogle à l'aide d'un clic sur un bouton */
         $(".ibsn-toggle").each(function(){
@@ -100,6 +100,12 @@ function moveCourrierFields(){
                 $(this).parent().next().toggle(500);
             });
         });
+        /** On force aux utilisateurs de faire un choix sur le type de contenu à utiliser, plutôt que d'utiliser un choix par défaut */
+        /** Pour celà on ajoute une option vide au sélecteur de type de contenu */
+        $("[data-internal-name='ContentTypeChoice'] select").prepend("<option class='ibsn-readonly-option' >Sélectionnez le type du courrier</option>");
+        /** Et on supprime tous les Event Handlers */
+        $(".ibsn-readonly-option").off();
+
         /** On cache les éléments qu'on ne doit pas afficher dans le formulaire d'édition */
         $(".ibsn-readonly").hide();
         /** On en profite pour cacher cet élément */
