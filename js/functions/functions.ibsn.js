@@ -100,8 +100,14 @@ function getContentTypeID(ctName) {
  * @param {string} contentTypeID le GUID du type de contenu qu'on veut sélectionner par défaut
  */
 function autoselectContentType(contentTypeID){
-    /** On efface le paramétre de l'URL. Sinon, la page va se recharger indéfiniment */
-    window.history.pushState({}, document.title, "/" + window.location.pathname);
+    /** URL Absolue de la page */
+    pagePath = location.href;
+    /** On enlève de l'URL le paramètre 'TypeDeContenu=....' , sinon la page va se recharger indéfiniment */
+    pagePath = pagePath.replace(/(TypeDeContenu=).*?(&)/,'$1' + '' + '$2');
+    pagePath = pagePath.replace('&TypeDeContenu=', '');
     /** Selection du type de contenu par défaut */
-    $("[data-internal-name='ContentTypeChoice'] select option[value*='"+contentTypeID+"']").attr('selected','selected').change();
+    window.location = pagePath+"&ContentTypeId="+contentTypeID;
+
+    /** Selection du type de contenu par défaut (En jQuery) */
+    //$("[data-internal-name='ContentTypeChoice'] select option[value*='"+contentTypeID.replace(/[{}']/g,'')+"']").attr('selected','selected').change();
 }
