@@ -9,7 +9,7 @@ function uploadCourrierButtons() {
     $.getScript( "/SiteAssets/js/functions/functions.ibsn.js" )
     .done(function() {
         _getCourrierRecuCTid.resolve(getContentTypeID("Courrier recu"));
-        _getCourrierEnvoyeCTid.resolve(getContentTypeID("Courrier envoye"));
+        _getCourrierEnvoyeCTid.resolve(getContentTypeID("Courrier envoyé"));
     }).fail(function( jqxhr, settings, exception ) { console.log("Le fichier n'a pu être chargé") });
     
     /** Paramétrage du bouton d'upload de courrier reçu */
