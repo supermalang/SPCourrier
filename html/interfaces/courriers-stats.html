@@ -1,0 +1,41 @@
+<!-- 
+    Affiche les statistiques (résumé) :
+        - Nombre de courriers en boîte de dépôt
+        - Nombre de courrier reçus ces 30 derniers jours
+        - Nombre de courriers envoyés ces 30 derniers jours
+
+    Dépendances : 
+        - jQuery
+        - functions.ibsn.js
+-->
+<table>
+    <tbody> 
+       <tr>
+          <td valign="top">
+             <img src="/SiteAssets/img/MailManagementSystem.png" alt="" style="width: 155px; height: 138px; margin-top: 15px; margin-bottom: 15px;"/>
+          </td>
+          <td valign="top">
+             <h1>Bienvenue dans le centre de courriers<br/></h1>
+             <p> 
+                <span class="ms-rteFontFace-12 ms-rteThemeForeColor-1-4" style="font-size: 15px;"> Il y a :<br/></span></p> 
+             <ul> 
+                <li style="list-style-type:none;"> 
+                   <h2> 
+                      <a href="/depot"><span id="dropOffItemCount"></span></a><br/>
+                    </h2>
+                </li> 
+                <li> 
+                   <h2> 
+                      <a href="/recus"><span id="recusItemCount"></span></a><br/>
+                    </h2> 
+                </li> 
+                <li> 
+                   <h2>
+                      <a href="/envoyes"><span id="envoyesItemCount"></span></a><br/>
+                    </h2> 
+                </li> 
+             </ul>
+          </td>
+       </tr>
+    </tbody> 
+ </table> 
