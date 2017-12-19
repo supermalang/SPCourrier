@@ -111,3 +111,25 @@ function autoselectContentType(contentTypeID){
     /** Selection du type de contenu par défaut (En jQuery) */
     //$("[data-internal-name='ContentTypeChoice'] select option[value*='"+contentTypeID.replace(/[{}']/g,'')+"']").attr('selected','selected').change();
 }
+
+/**
+ * Récupère le nombre d'éléments d'une liste ou d'une bibliothèque
+ * @param {string} list le nom de la liste dont on veut compter les éléments
+ * @param {string} filter le filtre à appliquer sur la requête
+ */
+function countListItems(list, filter=''){
+    var nbItems = $.Deferred(); var _filter = '';
+    if(filter.length > 0){ _filter = "?$filter="+filter; }
+
+    $.ajax({
+        url: "/_api/web/lists/GetByTitle('"+list+"')/items"+_filter,
+        type: "GET",
+        beforeSend: function(xhr){
+            xhr.setRequestHeader('Accept', 'Application/json;odata=verbose');
+            xhr.setRequestHeader('Content-Type', 'Application/json;odata=verbose');
+        },  
+        success: function(data){ nbItems.resolve(data.d.results.length); }, 
+        error: function(XMLHttpRequest, textStatus, errorThrown){console.log("Statut: " + textStatus); console.log("Erreur: " + errorThrown); }
+    });
+    return nbItems;
+}
