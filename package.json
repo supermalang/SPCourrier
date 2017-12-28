@@ -1,0 +1,17 @@
+{
+  "name": "CourrierJS",
+  "version": "1.0.0",
+  "description": "Gestion Electronique de Courriers",
+  "main": "index.js",
+  "repository": "https://github.com/supermalang/SharePoint.CourrierCSR.git",
+  "author": "Elhadji Malang DIEDHIOU <supermalang@outlook.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/lodash": "^4.14.91",
+    "jquery": "^3.2.1",
+    "sp-pnp-js": "^3.0.3",
+    "ts-loader": "^3.2.0",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
+  }
+}

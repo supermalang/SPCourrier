@@ -1,10 +1,6 @@
-# JQuery #
-###################
-js/jquery.min.js
 .gitignore
-
+node_modules/
+dist/
+js/
 # Images
 img/
-
-# typescript
-typescript/

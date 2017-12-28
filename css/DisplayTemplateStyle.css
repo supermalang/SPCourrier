@@ -84,6 +84,18 @@ font-family: Arial, Helvetica, sans-serif;
     height: auto;
     min-height: 660px;
 } 
+.ibsn-signal-left-border-blue{
+    border-left : 4px solid #09C;
+}
+.ibsn-signal-left-border-yellow{
+    border-left : 4px solid #DFAC04;
+}
+.ibsn-signal-left-border-grey{
+    border-left : 4px solid #5b626c;
+}
+.ibsn-signal-left-border-green{
+    border-left : 4px solid #6CC836;
+}
 
 
 /** Nous copions les propriétés de ms-cui-disabled **/

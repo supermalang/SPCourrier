@@ -15,22 +15,40 @@
           <span data-internal-name="ContentTypeChoice" class="ibsn-field-value"></span>
         </div>
 
-        <!-- Objet du courrier -->
-        <div class="ibsn-form-group">
-          <span class="ibsn-standardheader"></span>
-          <span data-internal-name="ObjetCourrier" class="ibsn-field-value"></span>
-        </div>
-        
-        <!-- Description de l'état du courrier -->
-        <div class="ibsn-form-group ibsn-readonly">
-          <span class="ibsn-standardheader"></span>
-          <span data-internal-name="DescriptionEtatCourrier" class="ibsn-field-value"></span>
-        </div>
-        
         <!-- Nature du courrier -->
         <div class="ibsn-form-group">
           <span class="ibsn-standardheader"></span>
           <span data-internal-name="NatureCourrier" class="ibsn-field-value"></span>
+        </div>
+        
+        <!-- Description de l'état du courrier -->
+        <div class="ibsn-form-group ibsn-displayonly ibsn-state-signal">
+          <span class="ibsn-standardheader"></span>
+          <span data-internal-name="DescriptionEtatCourrier" class="ibsn-field-value"></span>
+        </div>
+        
+        <!-- Date de réception du courrier -->
+        <div class="ibsn-form-group">
+          <span class="ibsn-standardheader"></span>
+          <span data-internal-name="DateReceptionCourrier" class="ibsn-field-value"></span>
+        </div>
+        
+        <!-- Numéro de référence interne du courrier -->
+        <div class="ibsn-form-group">
+          <span class="ibsn-standardheader"></span>
+          <span data-internal-name="R_x00e9_f_x00e9_rence_x0020_Interne" class="ibsn-field-value"></span>
+        </div>
+
+        <!-- Date du courrier -->
+        <div class="ibsn-form-group">
+          <span class="ibsn-standardheader"></span>
+          <span data-internal-name="DateCourrier" class="ibsn-field-value"></span>
+        </div>
+        
+        <!-- Numéro de référence de l'expéditeur du courrier -->
+        <div class="ibsn-form-group">
+          <span class="ibsn-standardheader"></span>
+          <span data-internal-name="ReferenceExpediteur" class="ibsn-field-value"></span>
         </div>
         
         <!-- Expéditeur du courrier entrant -->
@@ -44,14 +62,20 @@
               <input type="radio" name="typeExpediteur" id="expediteurInterne"/> Expéditeur Interne
             </label>
           </span>
-          <span data-internal-name="ExpediteurCourrierEntrant" class="ibsn-field-value ibsn-courrier-expediteur-externe"></span>
-          <span data-internal-name="ExpediteurInterne" class="ibsn-field-value ibsn-courrier-expediteur-interne"></span>
+          <span data-internal-name="ExpediteurExterneCourrierRecu" class="ibsn-field-value ibsn-courrier-expediteur-externe"></span>
+          <span data-internal-name="ExpediteurInterneCourrierRecu" class="ibsn-field-value ibsn-courrier-expediteur-interne"></span>
         </div>
-        
+
+        <!-- Expéditeur du courrier entrant : En DispForm uniquement -->
+        <div class="ibsn-form-group ibsn-displayonly">
+            <span class="ibsn-standardheader"></span>
+            <span data-internal-name="ExpediteurCourrierRecu" class="ibsn-field-value"></span>
+        </div>
+
         <!-- Expéditeur du courrier sortant -->
         <div class="ibsn-form-group">
-          <span class="ibsn-standardheader"></span>
-          <span data-internal-name="ExpediteurCourrierSortant" class="ibsn-field-value"></span>
+            <span class="ibsn-standardheader"></span>
+            <span data-internal-name="ExpediteurCourrierEnvoye" class="ibsn-field-value"></span>
         </div>
         
         <!-- Adresse de l'expéditeur du courrier -->
@@ -59,15 +83,21 @@
           <span class="ibsn-standardheader ibsn-toggle"></span>
           <span data-internal-name="AdresseExpediteurCourrier" class="ibsn-field-value"></span>
         </div>
+
+        <!-- Objet du courrier -->
+        <div class="ibsn-form-group">
+          <span class="ibsn-standardheader"></span>
+          <span data-internal-name="ObjetCourrier" class="ibsn-field-value"></span>
+        </div>
         
         <!-- Destinataire du courrier entrant -->
         <div class="ibsn-form-group">
           <span class="ibsn-standardheader"></span>
-          <span data-internal-name="DestinataireCourrierEntrant" class="ibsn-field-value"></span>
+          <span data-internal-name="DestinataireCourrierRecu" class="ibsn-field-value"></span>
         </div>
-        
+
         <!-- Destinataire du courrier sortant -->
-        <div class="ibsn-form-group">
+        <div class="ibsn-form-group ibsn-editonly">
           <span class="ibsn-standardheader" style="display:block">Destinataire du courrier</span>
           <span>
             <label for="destinataireExterne">
@@ -77,14 +107,26 @@
               <input type="radio" name="typeDestinataire" id="destinataireInterne"/> Destinataire interne
             </label>
           </span>
-          <span data-internal-name="DestinataireCourrierSortant" class="ibsn-field-value ibsn-courrier-destinataire-externe"></span>
-          <span data-internal-name="DestinataireInterne" class="ibsn-field-value ibsn-courrier-destinataire-interne"></span>
+          <span data-internal-name="DestinataireExterneCourrierEnvoye" class="ibsn-field-value ibsn-editonly ibsn-courrier-destinataire-externe"></span>
+          <span data-internal-name="DestinataireInterneCourrierEnvoye" class="ibsn-field-value ibsn-editonly ibsn-courrier-destinataire-interne"></span>
         </div>
-        
-        <!-- Adresse du destinataire du courrier entrant -->
+
+        <!-- Destinataire du courrier sortant -->
+        <div class="ibsn-form-group ibsn-displayonly">
+          <span class="ibsn-standardheader"></span>
+          <span data-internal-name="DestinataireCourrierEnvoye" class="ibsn-field-value"></span>
+        </div>
+
+        <!-- Adresse du destinataire du courrier -->
         <div class="ibsn-form-group">
           <span class="ibsn-standardheader ibsn-toggle"></span>
           <span data-internal-name="AdresseDestinataireCourrier" class="ibsn-field-value"></span>
+        </div>
+        
+        <!-- Date d'envoi du courrier sortant -->
+        <div class="ibsn-form-group">
+          <span class="ibsn-standardheader ibsn-toggle"></span>
+          <span data-internal-name="DateEnvoiCourrier" class="ibsn-field-value"></span>
         </div>
         
         <!-- Personnes en copie du courrier -->
@@ -93,34 +135,16 @@
           <span data-internal-name="DestinataireEnCopieCourrier" class="ibsn-field-value"></span>
         </div>
         
-        <!-- Date du courrier -->
-        <div class="ibsn-form-group">
-          <span class="ibsn-standardheader"></span>
-          <span data-internal-name="DateCourrier" class="ibsn-field-value"></span>
-        </div>
-        
-        <!-- Date de réception du courrier -->
-        <div class="ibsn-form-group">
-          <span class="ibsn-standardheader"></span>
-          <span data-internal-name="DateReceptionCourrier" class="ibsn-field-value"></span>
-        </div>
-        
-        <!-- Numéro de référence de l'expéditeur du courrier -->
-        <div class="ibsn-form-group">
-          <span class="ibsn-standardheader"></span>
-          <span data-internal-name="ReferenceExpediteur" class="ibsn-field-value"></span>
-        </div>
-        
-        <!-- Numéro de référence interne du courrier -->
-        <div class="ibsn-form-group">
-          <span class="ibsn-standardheader"></span>
-          <span data-internal-name="R_x00e9_f_x00e9_rence_x0020_Interne" class="ibsn-field-value"></span>
-        </div>
-        
         <!-- Mots clés associés au courrier -->
         <div class="ibsn-form-group">
           <span class="ibsn-standardheader"></span>
           <span data-internal-name="MotsClesCourrier" class="ibsn-field-value"></span>
+        </div>
+        
+        <!-- Numéro de référence du courrier arrivée -->
+        <div class="ibsn-form-group">
+          <span class="ibsn-standardheader"></span>
+          <span data-internal-name="CourrierPrecedent" class="ibsn-field-value"></span>
         </div>
         
         <!-- Observations du courrier -->
@@ -128,13 +152,13 @@
           <span class="ibsn-standardheader ibsn-toggle"></span>
           <span data-internal-name="Observations" class="ibsn-field-value ibsn-observations"></span>
         </div>
-        
-        <!-- ID de document -->
+
+        <!-- Emplacement physique du courrier -->
         <div class="ibsn-form-group">
           <span class="ibsn-standardheader"></span>
-          <span data-internal-name="_dlc_DocIdUrl" class="ibsn-field-value"></span>
+          <span data-internal-name="EmplacementPhysique" class="ibsn-field-value"></span>
         </div>
-
+        
         <!-- Boutons d'action -->
         <div class="ibsn-form-group ibsn-field-actionbuttons"></div>
         
@@ -142,24 +166,5 @@
         <div class="ibsn-form-group ibsn-system-data"></div>
       </div>
     </section>
-
-    <script>
-      /** Gestion du toggle pour l'expéditeur du courrier entrant */
-      $('.ibsn-courrier-expediteur-interne').hide();
-      $("input[name='typeExpediteur'").click(function(){
-        if($("#expediteurExterne").is(':checked')){ $(".ibsn-courrier-expediteur-interne").hide();$(".ibsn-courrier-expediteur-externe").show(); }
-        if($("#expediteurInterne").is(':checked')){ $(".ibsn-courrier-expediteur-externe").hide();$(".ibsn-courrier-expediteur-interne").show(); }
-      })
-
-      /** Gestion du toggle pour l'expéditeur du courrier sortant */
-      $('.ibsn-courrier-destinataire-interne').hide();
-      $("input[name='typeDestinataire'").click(function(){
-        if($("#destinataireInterne").is(':checked')){ $(".ibsn-courrier-destinataire-externe").hide();$(".ibsn-courrier-destinataire-interne").show(); }
-        if($("#destinataireExterne").is(':checked')){ $(".ibsn-courrier-destinataire-interne").hide();$(".ibsn-courrier-destinataire-externe").show(); }
-      })
-    </script>
-
   </body>
 </html>
-
-

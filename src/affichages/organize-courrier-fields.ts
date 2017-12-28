@@ -1,17 +1,18 @@
+import * as $ from "jquery"
+import fonctions from "../fonctions"
+let fnct = new fonctions();
+
 /**
  * Organise le placement des champs des formulaires de courrier dans le formulaire courrierForm.html
- * Dépendances :
- *  - jQuery
- *  - functions.ibsn.js : Fichier qui contient des fonctions personnalisées
  */
-function moveCourrierFields(){
+export default function organizeCourrierFields(){
     /** Chemin relatif de la page active */
     var cheminRelatif = location.pathname;
 
     $(".ibsn-field-value").each(function(){
-        internalName = $(this).attr("data-internal-name");
-        elem = $(this);
-        elemLabel = elem.prev('.ibsn-standardheader');
+        let internalName = $(this).attr("data-internal-name");
+        let elem = $(this);
+        let elemLabel = elem.prev('.ibsn-standardheader');
 
         /** Parcourt les champs du formulaire par défaut présenté par SharePoint */
         $("table.ms-formtable td").each(function(){
@@ -27,7 +28,7 @@ function moveCourrierFields(){
 
                 /** Si on est dans la boîte de dépot, on construit l'URL du fichier */
                 if(urlFichierCourrier==null){
-                    urlFichierCourrier = "/DropOffLibrary/" + $(this).find("input[id*=FileLeafRef]").val() + $(this).find("input[id*=FileLeafRef] + .ms-fileField-fileExt").html();
+                    urlFichierCourrier = _spPageContextInfo.siteAbsoluteUrl+"/DropOffLibrary/" + $(this).find("input[id*=FileLeafRef]").val() + $(this).find("input[id*=FileLeafRef] + .ms-fileField-fileExt").html();
                 }
 
                 /** On vérifie l'extension du fichier */
@@ -66,16 +67,29 @@ function moveCourrierFields(){
         if (elem.is(':empty')){
             elem.parent().hide();
         }
-
         /** Dans la page de détails de courrier, on cache les champs vides */
-        if(cheminRelatif.indexOf("DispForm") >= 0) {
+        if(cheminRelatif.indexOf("DispForm") >= 0){
+            /** Gestion du toggle pour l'expéditeur du courrier entrant */
+            $('.ibsn-courrier-expediteur-interne').hide();
+            $("input[name='typeExpediteur'").click(function(){
+                if($("#expediteurExterne").is(':checked')){ $(".ibsn-courrier-expediteur-interne").hide();$(".ibsn-courrier-expediteur-externe").show(); }
+                if($("#expediteurInterne").is(':checked')){ $(".ibsn-courrier-expediteur-externe").hide();$(".ibsn-courrier-expediteur-interne").show(); }
+            })
+
+            /** Gestion du toggle pour l'expéditeur du courrier sortant */
+            $('.ibsn-courrier-destinataire-interne').hide();
+            $("input[name='typeDestinataire'").click(function(){
+                if($("#destinataireInterne").is(':checked')){ $(".ibsn-courrier-destinataire-externe").hide();$(".ibsn-courrier-destinataire-interne").show(); }
+                if($("#destinataireExterne").is(':checked')){ $(".ibsn-courrier-destinataire-interne").hide();$(".ibsn-courrier-destinataire-externe").show(); }
+            })
+
             /** On clone d'abord le champ, puis on supprime les commentaires inclus avant de vérifier si le champ est totalement vide */
             var elemclone = elem.clone();
             elemclone.contents().filter(function() {
                 return this.nodeType == 8;
                 //return this.nodeType == Node.COMMENT_NODE;
             }).remove();
-
+    
             /** Si le clone, sans les commentaires est vide, alors on cache le champ */
             if(!elemclone.html().replace(/\r?\n|\r|\t|\/ \//g,'').length){
                 elem.parent().hide();
@@ -84,6 +98,19 @@ function moveCourrierFields(){
         }
     });
 
+
+    /** On ajoute un signal visuel (Border-left), selon l'état du courrier */
+    var descriptionEtat = $(".ibsn-state-signal");
+    /** Si c'est un nouveau courrier on ajoute un signal bleu */
+    if(descriptionEtat.text().toUpperCase().indexOf("NOUVEAU") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-blue"); }
+    /** Si c'est un courrier en traitement on ajoute un signal jaune/orange */
+    if(descriptionEtat.text().toUpperCase().indexOf("TRAITEMENT") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-yellow"); }
+    /** Si c'est un courrier en attente  on ajoute un signal gris */
+    if(descriptionEtat.text().toUpperCase().indexOf("ATTENTE") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-grey"); }
+    /** Si c'est un courrier terminé on ajoute un signal vert */
+    if(descriptionEtat.text().toUpperCase().indexOf("TERMINÉ") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-green"); }
+    if(descriptionEtat.text().toUpperCase().indexOf("CLASSÉ") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-green"); }
+    
     /** Si on est dans une page d'édition (Ex : page de description dans la boîte de dépôt)' */
     if(cheminRelatif.indexOf("EditForm") >= 0) {
         /** On alterne la visibilité de l'affichage des éléments .ibsn-toogle à l'aide d'un clic sur un bouton */
@@ -108,6 +135,7 @@ function moveCourrierFields(){
 
         /** On cache les éléments qu'on ne doit pas afficher dans le formulaire d'édition */
         $(".ibsn-readonly").hide();
+        $(".ibsn-displayonly").hide();
         /** On en profite pour cacher cet élément */
         $("table.ms-formtoolbar").parent().hide();
     }
@@ -136,19 +164,11 @@ function moveCourrierFields(){
      *  Cette sélection est paramétrable à parir de l'URL, avec le paramétre 'TypeDeContenu' qui doit contenir le GUID du type de contenu
      *  qu'on veut sélectionner par défaut
      */
-    $.getScript( "/SiteAssets/js/functions/functions.ibsn.js" )
-    .done(function(){
-        /** Type de contenu à sélectionner par défaut */
-        var contentTypeID = getUrlParameter('TypeDeContenu');
-        /** Si la paramétre est défini */
-        if (typeof contentTypeID !== 'undefined') {
-            /** Sélection sélection d'un type de courrier (type de contenu) par défaut */
-            autoselectContentType(contentTypeID);
-        }
-    }).fail(function( jqxhr, settings, exception ) { console.log("Le fichier n'a pu être chargé") });
+    /** Type de contenu à sélectionner par défaut */
+    var contentTypeID = fnct.getUrlParameter('TypeDeContenu');
+    /** Si le paramétre est défini */
+    if (typeof contentTypeID !== 'undefined') {
+        /** Sélection sélection d'un type de courrier (type de contenu) par défaut */
+        fnct.autoselectContentType(contentTypeID);
+    }
 };
-
-/** Document ready */
-$(function(){
-    ExecuteOrDelayUntilScriptLoaded(moveCourrierFields, "sp.js");
-});
