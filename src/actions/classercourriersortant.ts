@@ -5,7 +5,7 @@ let fnct = new fonctions();
 /**
  * Démarre le workflow de classement du courrier reçu
  */
-export default function classerCourrier() {
+export default function classerCourrierSortant() {
     SP.SOD.registerSod('sp.workflowservices.js', SP.Utilities.Utility.getLayoutsPageUrl('sp.workflowservices.js'));
     SP.SOD.executeFunc('sp.workflowservices.js', "SP.WorkflowServices.WorkflowServicesManager", ()=>{
         //let _subscriptionId = 'C63E96D0-A7C2-4000-8137-EE0593E76B5D';
@@ -14,9 +14,9 @@ export default function classerCourrier() {
         let listGuid = _spPageContextInfo.pageListId;
         /** ID du workflow qu'on veut exécuter */
         let wfId = $.Deferred();
-        wfId.resolve(fnct.getWorkflowId(listGuid,"Courrier Entrant - Classer"));
+        wfId.resolve(fnct.getWorkflowId(listGuid,"Courrier Sortant - Classer"));
         
-        let confirm_classer = confirm("Voulez-vous vraiment classer ce courrier ? Si vous cliquez sur 'Oui' le courrier sera archivé il ne sera plus possible de le modifier.");
+        let confirm_classer = confirm("Voulez-vous vraiment classer ce courrier ? Si vous cliquez sur 'Oui' le courrier sera archivé et il ne sera plus possible de le modifier.");
         
         $.when(wfId).done(function(_wfId){
             //console.log("Workflow ID : "+wfId)

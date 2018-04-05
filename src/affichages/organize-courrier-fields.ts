@@ -67,22 +67,8 @@ export default function organizeCourrierFields(){
         if (elem.is(':empty')){
             elem.parent().hide();
         }
-        /** Dans la page de détails de courrier, on cache les champs vides */
+        /** Dans la page de détails (Display Form) de courrier, on cache les champs vides */
         if(cheminRelatif.indexOf("DispForm") >= 0){
-            /** Gestion du toggle pour l'expéditeur du courrier entrant */
-            $('.ibsn-courrier-expediteur-interne').hide();
-            $("input[name='typeExpediteur'").click(function(){
-                if($("#expediteurExterne").is(':checked')){ $(".ibsn-courrier-expediteur-interne").hide();$(".ibsn-courrier-expediteur-externe").show(); }
-                if($("#expediteurInterne").is(':checked')){ $(".ibsn-courrier-expediteur-externe").hide();$(".ibsn-courrier-expediteur-interne").show(); }
-            })
-
-            /** Gestion du toggle pour l'expéditeur du courrier sortant */
-            $('.ibsn-courrier-destinataire-interne').hide();
-            $("input[name='typeDestinataire'").click(function(){
-                if($("#destinataireInterne").is(':checked')){ $(".ibsn-courrier-destinataire-externe").hide();$(".ibsn-courrier-destinataire-interne").show(); }
-                if($("#destinataireExterne").is(':checked')){ $(".ibsn-courrier-destinataire-interne").hide();$(".ibsn-courrier-destinataire-externe").show(); }
-            })
-
             /** On clone d'abord le champ, puis on supprime les commentaires inclus avant de vérifier si le champ est totalement vide */
             var elemclone = elem.clone();
             elemclone.contents().filter(function() {
@@ -98,26 +84,14 @@ export default function organizeCourrierFields(){
         }
     });
 
-
-    /** On ajoute un signal visuel (Border-left), selon l'état du courrier */
-    var descriptionEtat = $(".ibsn-state-signal");
-    /** Si c'est un nouveau courrier on ajoute un signal bleu */
-    if(descriptionEtat.text().toUpperCase().indexOf("NOUVEAU") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-blue"); }
-    /** Si c'est un courrier en traitement on ajoute un signal jaune/orange */
-    if(descriptionEtat.text().toUpperCase().indexOf("TRAITEMENT") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-yellow"); }
-    /** Si c'est un courrier en attente  on ajoute un signal gris */
-    if(descriptionEtat.text().toUpperCase().indexOf("ATTENTE") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-grey"); }
-    /** Si c'est un courrier terminé on ajoute un signal vert */
-    if(descriptionEtat.text().toUpperCase().indexOf("TERMINÉ") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-green"); }
-    if(descriptionEtat.text().toUpperCase().indexOf("CLASSÉ") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-green"); }
-    
     /** Si on est dans une page d'édition (Ex : page de description dans la boîte de dépôt)' */
     if(cheminRelatif.indexOf("EditForm") >= 0) {
         /** On alterne la visibilité de l'affichage des éléments .ibsn-toogle à l'aide d'un clic sur un bouton */
+        /** Les éléments .ibsn-toogle sont des champs de texte optionnels, réduits par défaut. Pour ajouter des données on l'affiche (agrandit) l'élément */
         $(".ibsn-toggle").each(function(){
             /** Le champ est d'abord caché */
             $(this).next().hide();
-            /** Ajout du qui va actionner le basculement de la visibilité */
+            /** Ajout du lien cliquable qui va actionner le basculement de la visibilité */
             $(this).append("<a class='ibsn-right ibsn-toggle-button' style='position:relative;top:-15px;'>Ajouter</a>");
             /** Basculement de la visibilité du champ */
             $(this).find(".ibsn-toggle-button").click(function(){
@@ -126,12 +100,26 @@ export default function organizeCourrierFields(){
                 $(this).parent().next().find('textarea').val('');
                 $(this).parent().next().toggle(500);
             });
+            /** On force aux utilisateurs de faire un choix sur le type de contenu à utiliser, plutôt que d'utiliser un choix par défaut */
+            /** Pour celà on ajoute une option vide au sélecteur de type de contenu */
+            /* $("[data-internal-name='ContentTypeChoice'] select").prepend("<option class='ibsn-readonly-option' >Sélectionnez le type du courrier</option>");*/
+            /** Et on supprime tous les Event Handlers */
+            $(".ibsn-readonly-option").off();
         });
-        /** On force aux utilisateurs de faire un choix sur le type de contenu à utiliser, plutôt que d'utiliser un choix par défaut */
-        /** Pour celà on ajoute une option vide au sélecteur de type de contenu */
-        $("[data-internal-name='ContentTypeChoice'] select").prepend("<option class='ibsn-readonly-option' >Sélectionnez le type du courrier</option>");
-        /** Et on supprime tous les Event Handlers */
-        $(".ibsn-readonly-option").off();
+        
+        /** Gestion du toggle pour l'expéditeur du courrier entrant */
+        $('.ibsn-courrier-expediteur-interne').hide();
+        $("input[name='typeExpediteur'").click(function(){
+            if($("#expediteurExterne").is(':checked')){ $(".ibsn-courrier-expediteur-interne").hide();$(".ibsn-courrier-expediteur-externe").show(); }
+            if($("#expediteurInterne").is(':checked')){ $(".ibsn-courrier-expediteur-externe").hide();$(".ibsn-courrier-expediteur-interne").show(); }
+        })
+
+        /** Gestion du toggle pour l'expéditeur du courrier sortant */
+        $('.ibsn-courrier-destinataire-interne').hide();
+        $("input[name='typeDestinataire'").click(function(){
+            if($("#destinataireInterne").is(':checked')){ $(".ibsn-courrier-destinataire-externe").hide();$(".ibsn-courrier-destinataire-interne").show(); }
+            if($("#destinataireExterne").is(':checked')){ $(".ibsn-courrier-destinataire-interne").hide();$(".ibsn-courrier-destinataire-externe").show(); }
+        })
 
         /** On cache les éléments qu'on ne doit pas afficher dans le formulaire d'édition */
         $(".ibsn-readonly").hide();
@@ -140,6 +128,7 @@ export default function organizeCourrierFields(){
         $("table.ms-formtoolbar").parent().hide();
     }
 
+    
     /** On déplace les boutons d'action vers leur emplacement de destination sur le template */
     $("table.ms-formtable + table").first().find("td.ms-toolbar[width='99%']").nextAll().appendTo($(".ibsn-field-actionbuttons"));
     $("table.ms-formtoolbar").eq(1).find("td.ms-toolbar[width='99%']").nextAll().appendTo($(".ibsn-field-actionbuttons"));
@@ -159,7 +148,7 @@ export default function organizeCourrierFields(){
     if(!location.pathname.substring(1).includes("DropOffLibrary")){
         $(".ibsn-system-data > tbody:nth-child(2)").hide();
     }
-
+    
     /** Dans le EditForm (Formulaire de description du courrier) on sélectionne du type de contenu par défaut.
      *  Cette sélection est paramétrable à parir de l'URL, avec le paramétre 'TypeDeContenu' qui doit contenir le GUID du type de contenu
      *  qu'on veut sélectionner par défaut
@@ -171,4 +160,17 @@ export default function organizeCourrierFields(){
         /** Sélection sélection d'un type de courrier (type de contenu) par défaut */
         fnct.autoselectContentType(contentTypeID);
     }
+    
+    /** On ajoute un signal visuel (Border-left), selon l'état du courrier */
+    var descriptionEtat = $(".ibsn-state-signal");
+    /** Si c'est un nouveau courrier on ajoute un signal bleu */
+    if(descriptionEtat.text().toUpperCase().indexOf("NOUVEAU") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-blue"); }
+    /** Si c'est un courrier en traitement on ajoute un signal jaune/orange */
+    if(descriptionEtat.text().toUpperCase().indexOf("TRAITEMENT") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-yellow"); }
+    /** Si c'est un courrier en attente  on ajoute un signal gris */
+    if(descriptionEtat.text().toUpperCase().indexOf("ATTENTE") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-grey"); }
+    /** Si c'est un courrier terminé on ajoute un signal vert */
+    if(descriptionEtat.text().toUpperCase().indexOf("TERMINÉ") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-green"); }
+    if(descriptionEtat.text().toUpperCase().indexOf("CLASSÉ") != -1 ){ descriptionEtat.addClass("ibsn-signal-left-border-green"); }
 };
+

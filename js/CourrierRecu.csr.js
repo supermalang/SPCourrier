@@ -2,8 +2,8 @@
     function renderDisplayFormLink(renderCtx) {
         var item = renderCtx.CurrentItem;
         var displayFormUrl = renderCtx.displayFormUrl + '&ID=' + item.ID + "&Source=/courriers/Pages/Courriers-recus.aspx";
-        return '<a href="' + displayFormUrl + '">' + item.ObjetCourrier + '</a>'; 
-        return String.format('<a href="{0}" class="ms-listlink" onfocus="OnLink(this)" onclick="DisplayItem(event, \'{0}\');return false;">{1}</a>', displayFormUrl, item.ObjetCourrier)
+        return '<a href="' + displayFormUrl + '">' + item.ObjetCourrier + '</a>';
+                //+String.format('<a href="{0}" class="ms-listlink" onfocus="OnLink(this)" onclick="DisplayItem(event, \'{0}\');return false;">{1}</a>', displayFormUrl, item.ObjetCourrier)
     }
 
     function postRender(ctx){

@@ -1,8 +1,8 @@
 import * as $ from "jquery"
+/** Boîte de dialogue */
+let modalBox = null;  
 
 export default class fonctions {
-    /** Boîte de dialogue */
-    private modalBox = null;  
     
     /**
      * Récupère la valeur d'un paramètre de l'URL
@@ -93,56 +93,100 @@ export default class fonctions {
     /**
      * Démarre le workflow
      * @param {string} messageAttente le message à afficher dans la boîte de dialogue
-     * @param {any} subscriptionId l'ID de subcription du workflow : Le Subscription Service gère toutes les associations de workflow
+     * @param {any} wfId l'ID du workflow
      * @param {number?} itemId élément de liste sur lequel on démarre le workflow. Si cette variable est vide, SharePoint va lancer le WF en tant que WF de site
      */
-    StartWorkflow(messageAttente:string, subscriptionId:any, itemId?:number) {
-        this.showInProgressDialog(messageAttente);
+    StartWorkflow(titreMessageAttente:string, descriptionMessageAttente:string, wfId:any, itemId?:number) {
+        this.showInProgressDialog(titreMessageAttente, descriptionMessageAttente);
+        let cipd = this.closeInProgressDialog;
+        let closeModal = false;
         /** Contexte actif de SharePoint */
         var ctx = SP.ClientContext.get_current();
-        /** Workflow Service Manager : Récupère tous les WF d'un site */
-        var wfManager = SP.WorkflowServices.WorkflowServicesManager.newObject(ctx, ctx.get_web());
-        /** Workflow Subscription Service : Gère toutes les associations de workflow  */
-        var subscription = wfManager.getWorkflowSubscriptionService().getSubscription(subscriptionId);
+        /** Le Workflow Service Manager est la "passerelle" vers les services : Subscription Service, Instance Service, etc.. */
+        var wfServiceManager = SP.WorkflowServices.WorkflowServicesManager.newObject(ctx, ctx.get_web());
+        /**
+         * Workflow Subscription Service : Gère toutes les associations de workflow (lier ou détacher un WF à une liste, etc.)
+         * Le nom "Subscription" vient du fait que chaque association de WF s'abonne au Service Bus (utilisé par le Serveur WF Manager)
+         * Cet abonnement est en réalité une écoute de différents évènements qui peuvent déclencher l'exécution du Workflow
+         * Pour plus d'informations : https://docs.microsoft.com/en-us/sharepoint/dev/general-development/working-with-the-sharepoint-workflow-services-client-side-object-model#workflow-services-csom-and-jsom-api-components
+         */
+        var wfSubscriptionService = wfServiceManager.getWorkflowSubscriptionService();
+        /** 
+         * Ce service peut être utilisé pour exécuter des actions telles que :
+         * Démarrer, Mettre en pause, Reprendre l'exécution, Terminer ou Quitter l'exécution d'une instance de Workflow
+         */
+        var wfInstanceService = wfServiceManager.getWorkflowInstanceService();
+        /** Association de workflow (L'association peut est considérée ici comme étant l'écoute sur le Service Bus) */
+        var wfSubscription = wfSubscriptionService.getSubscription(wfId);
         
-        ctx.load(subscription, 'PropertyDefinitions');
-        /** Exécution de la requête de chargement du workflow */
+        ctx.load(wfSubscription);
         ctx.executeQueryAsync(
-            function (sender, args) { // On success : Chargement du workflow
+            function(sender, args) { // On success : Démarrage du workflow
                 var params= new Object();
                 /** Paramètres à passer au workflow lors de son démarrage*/
-                var formData = subscription.get_propertyDefinitions()["FormData"];
+                var formData = wfSubscription.get_propertyDefinitions()["FormData"];
                 /** S'il y a des paramètres à passer au workflow */
                 if (formData != null && formData != 'undefined' && formData != "") {
                     var assocParams = formData.split(";#");
                     for (var i = 0; i < assocParams.length; i++) {
-                        params[assocParams[i]] = subscription.get_propertyDefinitions()[assocParams[i]];
+                        params[assocParams[i]] = wfSubscription.get_propertyDefinitions()[assocParams[i]];
                     }
                 }
                 /** Si 'itemId' est défini, on lance le WF sur l'élément */
                 if (itemId) {
-                    wfManager.getWorkflowInstanceService().startWorkflowOnListItem(subscription, itemId, params);
+                    wfInstanceService.startWorkflowOnListItem(wfSubscription, itemId, params);
                 }
                 /** Sinon, on lance le WF en tant que WF de site */
                 else {
-                    wfManager.getWorkflowInstanceService().startWorkflow(subscription, params);
+                    wfInstanceService.startWorkflow(wfSubscription, params);
                 }
                 /** Exécution de la requête de démarrage du workflow */
                 ctx.executeQueryAsync(
-                    function (sender, args) { this.closeInProgressDialog(); },// On Success
-                    function (sender, args) { this.closeInProgressDialog(); alert('Echec du démarrage du flux de travail'); } // On Fail
+                    function (sender, args) { cipd() ; /* closeInProgressDialog */},// On Success
+                    function (sender, args) { cipd() ; /* closeInProgressDialog */ alert('Echec du démarrage du flux de travail'); } // On Fail
                 );
-            },
-            function (sender, args) { this.closeInProgressDialog(); alert('Echec du démarrage du flux de travail'); } // On Fail : Chargement du workflow
+            },// Fin On Success
+            function (sender, args) { console.log("Erreur " + args.get_message()); this.closeInProgressDialog(); alert('Echec du démarrage du flux de travail'); } // On Fail : Chargement du workflow
         );
     }
-    /** Ferme la boîte de dialogue */
-    closeInProgressDialog(){ if (this.modalBox != null) { this.modalBox.close(); } }
+
+    /**
+     * Récupère le numéro d'association d'un workflow
+     * @param listGuid Guid de la liste
+     * @param wfName Nom du workflow dont on veut récupérer le numéro d'association
+     */
+    getWorkflowId(listGuid:any,wfName:string){
+        /** Contexte actif de SharePoint */
+        var ctx = SP.ClientContext.get_current();
+        /** Le Workflow Service Manager est la "passerelle" vers les services : Subscription Service, Instance Service, etc.. */
+        var wfServiceManager = SP.WorkflowServices.WorkflowServicesManager.newObject(ctx, ctx.get_web());
+        /** Le Workflow ID ID du workflow qui nous interesse */
+        var _wfId = $.Deferred();
+        /** Workflow Subscription Service */
+        var wfSubscriptionService = wfServiceManager.getWorkflowSubscriptionService();
+        /** Association de workflow (L'association peut est considérée ici comme étant l'écoute sur le Service Bus) */
+        var wfSubscription = wfSubscriptionService.enumerateSubscriptionsByList(listGuid);
+        
+        ctx.load(wfSubscription);
+        ctx.executeQueryAsync(
+            function(sender, args) { // On success :
+                var e = wfSubscription.getEnumerator();
+                while (e.moveNext()) {
+                    var def = e.get_current();
+                    if (def.get_name() == wfName) { _wfId.resolve(def.get_id());  break; }
+                }
+            }, function (sender, args) { console.log("Erreur " + args.get_message()) /*sender.closeInProgressDialog(); alert('Echec du démarrage du flux de travail');*/ } // On Fail : Chargement du workflow
+        );
+        return _wfId;
+    }
+
+    /** Ferme la boîte de dialogue et recharge la page*/
+    closeInProgressDialog(){ if (modalBox != null) { modalBox.close(); location.reload(); } }
     
     /** Affiche une boîte de dialogue */
-    showInProgressDialog(message) {
-        if (this.modalBox == null) {
-            this.modalBox = SP.UI.ModalDialog.showWaitScreenWithNoClose(message, "Test", null, null);
+    showInProgressDialog(titre, message) {
+        if (modalBox == null) {
+            modalBox = SP.UI.ModalDialog.showWaitScreenWithNoClose(titre, message, null, null);
         }
     }
 }

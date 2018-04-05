@@ -14,11 +14,34 @@
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/@types/microsoft-ajax/-/microsoft-ajax-0.0.33.tgz#5fb6694f9d5aa599839325334c2e9a0ba9b74774"
 
+"@types/node@*":
+  version "9.6.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.0.tgz#d3480ee666df9784b1001a1872a2f6ccefb6c2d7"
+
 "@types/sharepoint@2013.1.9":
   version "2013.1.9"
   resolved "https://registry.yarnpkg.com/@types/sharepoint/-/sharepoint-2013.1.9.tgz#8be62a1b6dbfe0bf9dfc8e0fed125199a36fb60d"
   dependencies:
     "@types/microsoft-ajax" "*"
+
+"@types/tapable@*":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.0.tgz#b76254453021be05681f6213416766bac9afb99c"
+
+"@types/uglify-js@*":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/uglify-js/-/uglify-js-3.0.0.tgz#b765cf23abdc6ab2a67f2b72a9e94a1d43c6432e"
+  dependencies:
+    source-map "^0.6.1"
+
+"@types/webpack@^4.1.2":
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.1.2.tgz#96b45333201dd1526b85fbe18f1972f828f7e996"
+  dependencies:
+    "@types/node" "*"
+    "@types/tapable" "*"
+    "@types/uglify-js" "*"
+    source-map "^0.6.0"
 
 abbrev@1:
   version "1.1.1"
@@ -1706,7 +1729,7 @@ source-map@^0.5.3, source-map@^0.5.6, source-map@~0.5.1:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
 
-source-map@~0.6.1:
+source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
 

@@ -10,7 +10,7 @@ let fnct = new fonctions();
  *    - Les personnes en copie peuvent (Assigner, Annoter, Partager)
  *    - Les autres peuvent (Afficher le courrier seulement)
  */
-export default function disableSPRibbonActions(){
+export default function disableSPRibbonActions_recus(){
     /** On commence par désactiver temporairement tous les boutons d'actions personnalisés (à l'aide de propriétés CSS, plutôt qu'en supprimant les eventHandlers) */
     $(".ms-cui-ctl-largelabel").parent('a').css("pointer-events", "none");
     $(".ms-cui-ctl-largelabel").parent('a').addClass("ms-cui-row ibsn-cui-disabled");

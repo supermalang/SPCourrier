@@ -1,32 +1,36 @@
 import pnp from "sp-pnp-js"
 import * as $ from "jquery"
-pnp.setup({ sp: { headers: { "Accept": "application/json; odata=verbose" } } });
+pnp.setup(
+    { sp: { headers: {
+        'Accept': 'application/json; odata=verbose',
+        'Content-Type': 'application/json; odata=verbose',
+    } } });
 
 export default function getStatsCourrier() {
     let nbCourriersDeposes = $.Deferred();
     let nbCourriersRecus = $.Deferred();
     let nbCourriersEnvoyes = $.Deferred();
     
-    pnp.sp.web.lists.getByTitle("Boite de dépot").items.get().then((deposes: any[]) => {
-        nbCourriersDeposes.resolve(deposes.length);
-    });
+    pnp.sp.web.lists.getByTitle("Boite%20de%20d%C3%A9pot").get().then((deposes) => {
+        nbCourriersDeposes.resolve(deposes.ItemCount);
+    }).catch((erreur)=> {console.log("Erreur :");console.log(erreur)});
     
-    pnp.sp.web.lists.getByTitle("CourrierRecu").items.get().then((recus: any[]) => {
-        nbCourriersRecus.resolve(recus.length);
-    });
+    pnp.sp.web.lists.getByTitle("CourrierRecu").get().then((recus) => {
+        nbCourriersRecus.resolve(recus.ItemCount);
+    }).catch((erreur)=> {console.log("Erreur :");console.log(erreur)});
     
-    pnp.sp.web.lists.getByTitle("CourrierEnvoye").items.get().then((envoyes: any[]) => {
-        nbCourriersEnvoyes.resolve(envoyes.length);
-    });
+    pnp.sp.web.lists.getByTitle("CourrierEnvoye").get().then((envoyes) => {
+        nbCourriersEnvoyes.resolve(envoyes.ItemCount);
+    }).catch((erreur)=> {console.log("Erreur :");console.log(erreur)});
 
     $.when(nbCourriersRecus).done(function(nbcourrier){
-        if(nbcourrier<=1){ $("#recusItemCount").html("  "+nbcourrier+" <i>Courrier Arrivé</i> enregistré ces 30 derniers jours"); }
-        if(nbcourrier>1){ $("#recusItemCount").html("  "+nbcourrier+" <i>Courrier Arrivé</i> enregistrés ces 30 derniers jours"); }
+        if(nbcourrier<=1){ $("#recusItemCount").html("  "+nbcourrier+" <i>Courrier Arrivé</i> enregistré"); }
+        if(nbcourrier>1){ $("#recusItemCount").html("  "+nbcourrier+" <i>Courrier Arrivé</i> enregistrés"); }
     });
     
     $.when(nbCourriersEnvoyes).done(function(nbcourrier){
-        if(nbcourrier<=1){ $("#envoyesItemCount").html("  "+nbcourrier+" <i>Courrier Départ</i> enregistré ces 30 derniers jours"); }
-        if(nbcourrier>1){ $("#envoyesItemCount").html("  "+nbcourrier+" <i>Courrier Départ</i> enregistrés ces 30 derniers jours"); }
+        if(nbcourrier<=1){ $("#envoyesItemCount").html("  "+nbcourrier+" <i>Courrier Départ</i> enregistré"); }
+        if(nbcourrier>1){ $("#envoyesItemCount").html("  "+nbcourrier+" <i>Courrier Départ</i> enregistrés"); }
     });
     
     $.when(nbCourriersDeposes).done(function(nbcourrier){

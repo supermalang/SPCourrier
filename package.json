@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/lodash": "^4.14.91",
+    "@types/webpack": "^4.1.2",
     "jquery": "^3.2.1",
     "sp-pnp-js": "^3.0.3",
     "ts-loader": "^3.2.0",
