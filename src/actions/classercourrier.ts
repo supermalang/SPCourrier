@@ -16,11 +16,11 @@ export default function classerCourrier() {
         let wfId = $.Deferred();
         wfId.resolve(fnct.getWorkflowId(listGuid,"Courrier Entrant - Classer"));
         
-        let confirm_classer = confirm("Voulez-vous vraiment classer ce courrier ? Si vous cliquez sur 'Oui' le courrier sera archivé il ne sera plus possible de le modifier.");
+        let confirm_classer = confirm("Voulez-vous vraiment classer ce courrier ? Après validation, le courrier ne pourra plus être modifié");
         
         $.when(wfId).done(function(_wfId){
-            //console.log("Workflow ID : "+wfId)
-            if (confirm_classer == true) { fnct.StartWorkflow("Archivage du courrier","Veuillez patienter...",_wfId, _itemId) }
+            //console.log("Workflow ID : "+wfId);
+            if (confirm_classer == true) { fnct.StartWorkflow("Archivage du courrier","Veuillez patienter...",_wfId, _itemId); window.location.href = "/courriers/" }
         });
     });
 }

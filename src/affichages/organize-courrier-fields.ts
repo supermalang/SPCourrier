@@ -1,3 +1,4 @@
+import pnp from "sp-pnp-js"
 import * as $ from "jquery"
 import fonctions from "../fonctions"
 let fnct = new fonctions();
@@ -111,7 +112,21 @@ export default function organizeCourrierFields(){
         $('.ibsn-courrier-expediteur-interne').hide();
         $("input[name='typeExpediteur'").click(function(){
             if($("#expediteurExterne").is(':checked')){ $(".ibsn-courrier-expediteur-interne").hide();$(".ibsn-courrier-expediteur-externe").show(); }
-            if($("#expediteurInterne").is(':checked')){ $(".ibsn-courrier-expediteur-externe").hide();$(".ibsn-courrier-expediteur-interne").show(); }
+            if($("#expediteurInterne").is(':checked')){ 
+                $(".ibsn-courrier-expediteur-externe").hide();$(".ibsn-courrier-expediteur-interne").show(); 
+
+                /** On remplit automatiquement les champs Structure (Département) et Adresse (Adresse + Téléphone) */
+                    /** 1. On récupère d'abord le département de l'expéditeur */
+                    let _department = $.Deferred();
+                    pnp.sp.profiles.getUserProfilePropertyFor("SDE\\ssane","AccountName").then((dpt) => {
+                        _department.resolve(dpt.toUpperCase);
+                        $.when(_department).done(function(department){
+                            console.log("L'utilisateur sélectionné est : "+$("#expediteurInterne").val());
+                            console.log("Le département de Syaka est : "+department);
+
+                        });
+                    }).catch((erreur)=> {console.log("Erreur :");console.log(erreur)});
+            }
         })
 
         /** Gestion du toggle pour l'expéditeur du courrier sortant */
@@ -126,6 +141,40 @@ export default function organizeCourrierFields(){
         $(".ibsn-displayonly").hide();
         /** On en profite pour cacher cet élément */
         $("table.ms-formtoolbar").parent().hide();
+
+        /** Comportement du courrier confidentiel */
+        $("span[data-internal-name='NatureCourrier'] input[type='radio']").change(function(){
+            /** Si le courrier est confidentiel */
+            if($(this).is(':checked') && $(this).val() =="Confidentiel"){
+                console.log("Courrier Confidentiel");
+                /** 1. On supprime le champ "Partagé avec" */
+                $("span[data-internal-name='DestinataireEnCopieCourrier'] input").val('');
+                $("span[data-internal-name='DestinataireEnCopieCourrier']").parent().hide();
+                
+                /** 2. On met le champ Objet en readonly */
+                $("span[data-internal-name='ObjetCourrier'] input").val("COURRIER CONFIDENTIEL");
+                $("span[data-internal-name='ObjetCourrier'] input").prop('readonly', true);
+                
+                /** 3. On met un placeholder dans le champ destinataire/expediteur */
+                $("span[data-internal-name='ExpediteurExterneCourrierRecu'] input").val("Inconnu");
+                $("span[data-internal-name='DestinataireExterneCourrierEnvoye'] input").val("Inconnu");
+            }
+            /** Sinon */
+            else{
+                console.log("Courrier Ordinaire");
+                /** 1. On remet le champ partager */
+                $("span[data-internal-name='DestinataireEnCopieCourrier']").parent().show();
+                
+                /** 2. On enlève le readonly du champ Objet */
+                $("span[data-internal-name='ObjetCourrier'] input").val("");
+                $("span[data-internal-name='ObjetCourrier'] input").prop('readonly', false);
+                
+                /** 3. On met un placeholder dans le champ destinataire/expediteur */
+                $("span[data-internal-name='ExpediteurExterneCourrierRecu'] input").val("");
+                $("span[data-internal-name='DestinataireExterneCourrierEnvoye'] input").val("");
+            }
+        })
+            
     }
 
     
