@@ -150,20 +150,37 @@ export default function organizeCourrierFields(){
                 /** 1. On supprime le champ "Partagé avec" */
                 $("span[data-internal-name='DestinataireEnCopieCourrier'] input").val('');
                 $("span[data-internal-name='DestinataireEnCopieCourrier']").parent().hide();
+                /** 2. On supprime le champ "Mots Clés" */
+                $("span[data-internal-name='MotsClesCourrier'] input").val('');
+                $("span[data-internal-name='MotsClesCourrier']").parent().hide();
+                /** 3. On supprime le champ "Observations" */
+                $("span[data-internal-name='Observations'] input").val('');
+                $("span[data-internal-name='Observations']").parent().hide();
+                /** 4. On supprime le champ "Emplacement" */
+                $("span[data-internal-name='EmplacementPhysique'] input").val('');
+                $("span[data-internal-name='EmplacementPhysique']").parent().hide();
                 
-                /** 2. On met le champ Objet en readonly */
+                /** 5. On met le champ Objet en readonly */
                 $("span[data-internal-name='ObjetCourrier'] input").val("COURRIER CONFIDENTIEL");
                 $("span[data-internal-name='ObjetCourrier'] input").prop('readonly', true);
                 
-                /** 3. On met un placeholder dans le champ destinataire/expediteur */
+                /** 6. On met un placeholder dans le champ destinataire/expediteur */
                 $("span[data-internal-name='ExpediteurExterneCourrierRecu'] input").val("Inconnu");
                 $("span[data-internal-name='DestinataireExterneCourrierEnvoye'] input").val("Inconnu");
+                 /** 3. On met le champ DateCourrier Obligatoire */
+                                
             }
             /** Sinon */
             else{
                 console.log("Courrier Ordinaire");
                 /** 1. On remet le champ partager */
                 $("span[data-internal-name='DestinataireEnCopieCourrier']").parent().show();
+                /** 1. On remet le champ Mots Clés */
+                $("span[data-internal-name='MotsClesCourrier']").parent().show();
+                /** 1. On remet le champ Observations */
+                $("span[data-internal-name='Observations']").parent().show();
+                /** 1. On remet le champ Emplacement */
+                $("span[data-internal-name='EmplacementPhysique']").parent().show();
                 
                 /** 2. On enlève le readonly du champ Objet */
                 $("span[data-internal-name='ObjetCourrier'] input").val("");
@@ -172,9 +189,11 @@ export default function organizeCourrierFields(){
                 /** 3. On met un placeholder dans le champ destinataire/expediteur */
                 $("span[data-internal-name='ExpediteurExterneCourrierRecu'] input").val("");
                 $("span[data-internal-name='DestinataireExterneCourrierEnvoye'] input").val("");
+               
+                
             }
         })
-            
+
     }
 
     

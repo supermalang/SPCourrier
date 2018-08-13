@@ -70,7 +70,18 @@ export default function disableSPRibbonActions_recus(){
                             $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
                         }
                     break;
-        
+                    case 'Transferer':
+                    /**
+             * L'action 'Transferer' peut être activée uniquement si les conditions suivantes sont respectées :
+             *  - L'utilisateur actif est le secretaire général
+             *  
+             *  - Le courrier n'est pas dans l'état 'Transféré'
+             * Si les conditions ne sont pas respectées alors l'action reste désactivée
+             */ 
+                      $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').removeClass("ibsn-cui-disabled");
+                      $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
+                    
+                break;
                     case 'Assigner':
                         /**
                          * L'action 'Assigner' peut être activée uniquement si les conditions suivantes sont respectées :
