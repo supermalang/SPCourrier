@@ -1,5 +1,8 @@
+import pnp from "sp-pnp-js"
 import * as $ from "jquery"
 import fonctions from "../fonctions"
+
+pnp.setup({ sp: { headers: {'Accept': 'application/json; odata=verbose','Content-Type': 'application/json; odata=verbose', } } });
 
 let fnct = new fonctions();
 
@@ -22,8 +25,29 @@ export default function disableSPRibbonActions_recus(){
     let     listId = _spPageContextInfo.pageListId,
             itemId = parseInt(GetUrlKeyValue('ID'));
 
+    /** Récupération du Mail du SG. Nous avons besoin de ce mail pour activer la fonction de Transfert de courrier */
+    let _secretaireGeneral = $.Deferred();
+    pnp.sp.web.lists.getByTitle("Paramètres Personnalisés").items.select('Valeur').filter("Title eq 'SGUCAD'").get().then((data)=>{
+        console.log("Le mail du SG de l'UCAD est : "+data[0].Valeur);
+        _secretaireGeneral.resolve(data[0].Valeur);
+    })
+
     /** Utilisateur Actif */
     let currentUser = web.get_currentUser();
+    let _currentUserAccountName = $.Deferred();
+    pnp.sp.profiles.myProperties.get().then(myproperties=>{
+        _currentUserAccountName.resolve(myproperties.AccountName);
+    })
+
+    /** EMail de l'utilisateur actif */
+    let currentUserMail = $.Deferred();;
+    $.when(_currentUserAccountName).done(function(currentUserAccountName){
+        /** On récupère l'EMAIL de l'utilisateur Actif. On en a besoin pour comparer avec le mail du SG */
+        pnp.sp.profiles.getUserProfilePropertyFor(currentUserAccountName, 'WorkEmail').then( currentUserWorkEmail =>{
+            currentUserWorkEmail = JSON.stringify(currentUserWorkEmail);  let currentUserWorkEmail_obj = JSON.parse(currentUserWorkEmail);
+            currentUserMail.resolve(currentUserWorkEmail_obj.GetUserProfilePropertyFor);
+        })
+    });
 
     /** Récupération du courrier (l'élément de liste) */
     let     list = web.get_lists().getById(listId),
@@ -69,19 +93,26 @@ export default function disableSPRibbonActions_recus(){
                             $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').removeClass("ibsn-cui-disabled");
                             $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
                         }
-                    break;
+                        break;
+
                     case 'Transferer':
-                    /**
-             * L'action 'Transferer' peut être activée uniquement si les conditions suivantes sont respectées :
-             *  - L'utilisateur actif est le secretaire général
-             *  
-             *  - Le courrier n'est pas dans l'état 'Transféré'
-             * Si les conditions ne sont pas respectées alors l'action reste désactivée
-             */ 
-                      $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').removeClass("ibsn-cui-disabled");
-                      $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
-                    
-                break;
+                        /**
+                         * L'action 'Transferer' peut être activée uniquement si les conditions suivantes sont respectées :
+                         *  - L'utilisateur actif est le secretaire général
+                         *  - Le courrier n'est pas dans l'état 'Nouveau'
+                         * Si les conditions ne sont pas respectées alors l'action reste désactivée
+                         */ 
+                        $.when(_secretaireGeneral).done(function(secretaireGeneralMail){
+                            $.when(currentUserMail).done(function(_currentUserMail){
+                                if (destinataire == utilisateurConnecte && _currentUserMail == secretaireGeneralMail && etatCourrier=="Nouveau"){
+                                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').removeClass("ibsn-cui-disabled");
+                                    $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
+                                }
+                                console.log("Le mail de l'utilsateur actif  est : "+_currentUserMail);
+                            });
+                        });
+                        break;
+
                     case 'Assigner':
                         /**
                          * L'action 'Assigner' peut être activée uniquement si les conditions suivantes sont respectées :
