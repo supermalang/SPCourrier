@@ -43,6 +43,9 @@ export default function organizeCourrierTasksFields(){
 
     /** On déplace les boutons d'action vers leur emplacement de destination sur le template */
     $("table.ms-formtable + table").first().find("td.ms-toolbar[width='99%']").nextAll().appendTo($(".ibsn-task-outcome-editform"));
+    /** On cache l'action 'Refuser'. Il y aura une autre action 'Refuser' sur le Ruban */
+    $(".ibsn-task-outcome-editform input[type='button'][value='Refuser']").hide();
+
     /** On déplace les information de système SharePoint vers leur emplacement de destination sur le template */
     $("table.ms-formtable + table").first().contents().appendTo($(".ibsn-system-data"));
     

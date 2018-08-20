@@ -94,25 +94,27 @@ export default function disableSPRibbonActions_recus(){
                             $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
                         }
                         break;
-
+                        
                     case 'Transferer':
                         /**
                          * L'action 'Transferer' peut être activée uniquement si les conditions suivantes sont respectées :
-                         *  - L'utilisateur actif est le secretaire général
-                         *  - Le courrier n'est pas dans l'état 'Nouveau'
+                         *  - L'utilisateur actif est le secretaire général (ce n'est plus d'actualité. On généralise la fonctionnalité pour tous les utilisateurs)
+                         *  - Le courrier est dans l'état 'Nouveau'
                          * Si les conditions ne sont pas respectées alors l'action reste désactivée
                          */ 
-                        $.when(_secretaireGeneral).done(function(secretaireGeneralMail){
-                            $.when(currentUserMail).done(function(_currentUserMail){
-                                if (destinataire == utilisateurConnecte && _currentUserMail == secretaireGeneralMail && etatCourrier=="Nouveau"){
+                        //$.when(_secretaireGeneral).done(function(secretaireGeneralMail){
+                            //$.when(currentUserMail).done(function(_currentUserMail){
+                                //if (destinataire == utilisateurConnecte && _currentUserMail == secretaireGeneralMail && etatCourrier=="Nouveau"){
+                                if (destinataire == utilisateurConnecte && etatCourrier=="Nouveau"){
                                     $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').removeClass("ibsn-cui-disabled");
                                     $(".ms-cui-ctl-largelabel:contains('"+customActionTitle+"')").parent('a').css("pointer-events", "auto");
                                 }
-                                console.log("Le mail de l'utilsateur actif  est : "+_currentUserMail);
-                            });
-                        });
-                        break;
-
+                                //console.log("Le mail de l'utilsateur actif  est : "+_currentUserMail);
+                           // });
+                        //});
+                        //pnp.sp.web.lists.getByTitle('test').items.add
+                            break;
+                            
                     case 'Assigner':
                         /**
                          * L'action 'Assigner' peut être activée uniquement si les conditions suivantes sont respectées :
